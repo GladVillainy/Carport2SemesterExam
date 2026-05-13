@@ -6,16 +6,16 @@ public class User {
     private String address;
 
     //To create
-    public User(String email, String adress) {
+    public User(String address, String email) {
+        this.address = address;
         this.email = email;
-        this.address = adress;
     }
 
     //To read
-    public User(int id, String email, String adress) {
+    public User(int id, String email, String address) {
         this.id = id;
         this.email = email;
-        this.address = adress;
+        this.address = address;
     }
 
     public int getId() {
@@ -26,15 +26,11 @@ public class User {
         return email;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public String getAddress() {
+        return address;
     }
 }

@@ -2,23 +2,23 @@ package entities;
 
 public class Customer extends User{
     private int phoneNumber;
-    private String phone;
+    private String name;
     private String role;
 
 
     //To create
-    public Customer(String email, String adress, int phoneNumber, String phone, String role) {
-        super(email, adress);
+    public Customer(String address, String email, int phoneNumber, String name, String role) {
+        super(address, email);
         this.phoneNumber = phoneNumber;
-        this.phone = phone;
+        this.name = name;
         this.role = "Customer";
     }
 
     //To read
-    public Customer(int id, String email, String adress, int phoneNumber, String phone, String role) {
-        super(id, email, adress);
+    public Customer(int id, String email, String address, int phoneNumber, String name, String role) {
+        super(id, email, address);
         this.phoneNumber = phoneNumber;
-        this.phone = phone;
+        this.name = name;
         this.role = "Customer";
     }
 
@@ -26,8 +26,8 @@ public class Customer extends User{
         return phoneNumber;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getName() {
+        return name;
     }
 
     public String getRole() {
@@ -38,7 +38,11 @@ public class Customer extends User{
         this.phoneNumber = phoneNumber;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

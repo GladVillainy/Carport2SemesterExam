@@ -3,12 +3,12 @@ package entities;
 public class GuestCustomer extends User {
 
     //To read
-    public GuestCustomer(String email, String adress) {
-        super(email, adress);
+    public GuestCustomer(String address, String email) {
+        super(address, email);
     }
 
     //To create
-    public GuestCustomer(int id, String email, String adress) {
-        super(id, email, adress);
+    public GuestCustomer(int id, String email, String address) {
+        super(id, email, address);
     }
 }
