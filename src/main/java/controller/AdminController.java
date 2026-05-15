@@ -4,6 +4,7 @@ import entities.Customer;
 import io.javalin.Javalin;
 import persistence.AdminMapper;
 import persistence.ConnectionPool;
+import validators.InputValidator;
 import validators.RoleValidator;
 import io.javalin.http.Context;
 
@@ -28,7 +29,7 @@ public class AdminController {
         app.post("/editUserByID", ctx -> editUserByID(ctx, connectionPool));
         app.post("/showAllCustomers", ctx -> showAllCustomers(ctx, connectionPool));
         app.post("/showAllStaff", ctx -> showAllStaff(ctx, connectionPool));
-       
+
 
     }
 
@@ -39,38 +40,45 @@ public class AdminController {
 
     public static void deleteUserByID(Context ctx, ConnectionPool connectionPool) {
         if (RoleValidator.hasRole(ctx, "admin")) {
-            //gets attribute
-            int id = Integer.parseInt(ctx.formParam("user_id"));
-
-            //sends it to
+            String idInput = ctx.formParam("user_id");
+            if (InputValidator.isItEmpty(idInput) || !InputValidator.isNumeric(idInput)) {
+                ctx.attribute("errorMessage", "Ugyldigt bruger ID");
+                ctx.redirect("/adminUserCRUD");
+                return;
+            }
+            int id = Integer.parseInt(idInput);
             AdminMapper.deleteCustomerByID(id, connectionPool);
-
-            //Refreshes the admin page
             ctx.redirect("/adminUserCRUD");
         } else {
-            //redirect to frontpage, if role is not "admin"
             ctx.redirect("/index");
         }
     }
 
     public static void editUserByID(Context ctx, ConnectionPool connectionPool) {
-        //Validate if user is an admin
         if (RoleValidator.hasRole(ctx, "admin")) {
-            //gets attribute
+            String idInput = ctx.formParam("user_id");
+            if (InputValidator.isItEmpty(idInput) || !InputValidator.isNumeric(idInput)) {
+                ctx.attribute("errorMessage", "Ugyldigt bruger ID");
+                ctx.redirect("/adminUserCRUD");
+                return;
+            }
+
+            String phoneNumber = ctx.formParam("phoneNumber");
+            if (!InputValidator.isItEmpty(phoneNumber) && !InputValidator.isNumeric(phoneNumber)) {
+                ctx.attribute("errorMessage", "Telefonnummer skal være et tal");
+                ctx.redirect("/adminUserCRUD");
+                return;
+            }
+
             String email = ctx.formParam("email");
             String password = ctx.formParam("password");
             String address = ctx.formParam("address");
             String role = ctx.formParam("role");
-            String phoneNumber = ctx.formParam("phoneNumber");
-            int id = Integer.parseInt(ctx.formParam("user_id"));
+            int id = Integer.parseInt(idInput);
 
-            //sends the new attributes to be edited
             AdminMapper.editCustomerByID(id, email, password, address, phoneNumber, role, connectionPool);
-
-            //Refreshes the admin page
             ctx.redirect("/adminUserCRUD");
         } else {
-            //redirect to frontpage, if role is not "admin"
             ctx.redirect("/index");
         }
     }
@@ -106,7 +114,83 @@ public class AdminController {
         }
     }
 
-/// Material ///
+    /// Material ///
 
+    public static void createMaterial(Context ctx) {
+        if (RoleValidator.hasRole(ctx, "admin")) {
+            //Get data
+            String name = ctx.formParam("name");
+            String description = ctx.formParam("description");
+
+            String priceInput = ctx.formParam("price");
+            if (InputValidator.isItEmpty(priceInput)) {
+                ctx.attribute("errorMessage", "Pris skal udfyldes");
+                ctx.render("adminUserCRUD.html");
+                return;
+            }
+            if (!InputValidator.isNumeric(priceInput)) {
+                ctx.attribute("errorMessage", "Pris skal være et tal");
+                ctx.render("adminUserCRUD.html");
+                return;
+            }
+            double price = Double.parseDouble(priceInput);
+
+            String lengthInput = ctx.formParam("length");
+            int length = 0;
+            if (!InputValidator.isItEmpty(lengthInput)) {
+                if (!InputValidator.isNumeric(lengthInput)) {
+                    ctx.attribute("errorMessage", "Længde skal være et tal");
+                    ctx.render("adminUserCRUD.html");
+                    return;
+                }
+                length = Integer.parseInt(lengthInput);
+            }
+        } else {
+            ctx.redirect("/index");
+        }
+
+    }
+
+    public static void editMaterialByID(Context ctx, ConnectionPool connectionPool) {
+        if (RoleValidator.hasRole(ctx, "admin")) {
+            String idInput = ctx.formParam("material_id");
+            if (InputValidator.isItEmpty(idInput) || !InputValidator.isNumeric(idInput)) {
+                ctx.attribute("errorMessage", "Ugyldigt materiale ID");
+                ctx.redirect("/adminUserCRUD");
+                return;
+            }
+
+            String priceInput = ctx.formParam("price");
+            if (!InputValidator.isItEmpty(priceInput) && !InputValidator.isNumeric(priceInput)) {
+                ctx.attribute("errorMessage", "Pris skal være et tal");
+                ctx.redirect("/adminUserCRUD");
+                return;
+            }
+
+            String lengthInput = ctx.formParam("length");
+            if (!InputValidator.isItEmpty(lengthInput) && !InputValidator.isNumeric(lengthInput)) {
+                ctx.attribute("errorMessage", "Længde skal være et tal");
+                ctx.redirect("/adminUserCRUD");
+                return;
+            }
+
+            String name = ctx.formParam("name");
+            String description = ctx.formParam("description");
+            int id = Integer.parseInt(idInput);
+
+            AdminMapper.editMaterialByID(name, priceInput, description, lengthInput, id, connectionPool);
+            ctx.redirect("/adminUserCRUD");
+        } else {
+            ctx.redirect("/index");
+        }
+    }
+
+    public static void deleteMaterialByID() {
+
+    }
+
+    public static void seeAllMaterial() {
+
+    }
 
 }

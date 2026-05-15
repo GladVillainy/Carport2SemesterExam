@@ -140,27 +140,27 @@ public class AdminMapper {
 
     }
 
-    public static void editMaterialByID(String name, int price, String description, int length, int id, ConnectionPool connectionPool) {
+    public static void editMaterialByID(String name, String price, String description, String length, int id, ConnectionPool connectionPool) {
         // uses coalesce + nullif to revert back if felt is null else update with new data.
         String sql = "UPDATE public.material SET " +
                 "name = COALESCE(NULLIF(?, ''), name), " +
                 "price = COALESCE(NULLIF(?, ''), price), " +
                 "description = COALESCE(NULLIF(?, ''), description), " +
-                "length = COALESCE(NULLIF(?, ''), length), " +
-                "WHERE user_id = ?";
+                "length = COALESCE(NULLIF(?, ''), length) " +
+                "WHERE material_id = ?";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setString(1, name);
-            ps.setInt(2, price);
+            ps.setString(2, price);
             ps.setString(3, description);
-            ps.setInt(4, length);
+            ps.setString(4, length);
             ps.setInt(5, id);
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected != 1) {
-                throw new DatabaseException("Fejl opstået ved ændring af brugeren");
+                throw new DatabaseException("Fejl opstået ved ændring af materiale");
             }
         } catch (SQLException e) {
             String msg = "Der er sket en fejl. Prøv igen";
