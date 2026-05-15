@@ -1,14 +1,19 @@
 package persistence;
 
+import entities.Customer;
+import entities.User;
 import exceptions.DatabaseException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdminMapper {
-    public static void createUser(String email, String password, String address,
-                                  int phoneNumber, String role, ConnectionPool connectionPool) {
+    public static void createCustomer(String email, String password, String address,
+                                      int phoneNumber, String role, ConnectionPool connectionPool) {
 
         String sql = "INSERT INTO public.users (email, address, phone, password, role) VALUES (?, ?, ?, ?, ?)";
 
@@ -84,4 +89,20 @@ public class AdminMapper {
     }
 
 
+
+    public static void createMaterial(){
+
+    }
+
+    public static void editMaterialByID(){
+
+    }
+
+    public static void deleteMaterialByID(){
+
+    }
+
+    public static void seeAllMaterial(){
+
+    }
 }
