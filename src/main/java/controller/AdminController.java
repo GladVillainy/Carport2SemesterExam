@@ -1,11 +1,14 @@
 package controller;
 
+import entities.Customer;
 import io.javalin.Javalin;
 import persistence.AdminMapper;
 import persistence.ConnectionPool;
-import validators.InputValidator;
 import validators.RoleValidator;
 import io.javalin.http.Context;
+
+import java.util.Comparator;
+import java.util.List;
 
 
 public class AdminController {
@@ -13,7 +16,7 @@ public class AdminController {
 
         //Gatekeeps admin page, if user without permission somehow try to inter
         // it will return it to index
-        app.get("/admin", ctx -> {
+        app.get("/adminUserCRUD", ctx -> {
             if (!RoleValidator.hasRole(ctx, "admin")) {
                 ctx.redirect("/index");
                 return;
@@ -21,8 +24,8 @@ public class AdminController {
             ctx.render("adminUserCRUD.html");
         });
         app.post("/createUser", ctx -> createUser(ctx, connectionPool));
-        app.post("/deleteUserByID", ctx -> deleteUserByID(ctx,connectionPool));
-        app.post("/editUserByID", ctx -> editUserByID(ctx,connectionPool));
+        app.post("/deleteUserByID", ctx -> deleteUserByID(ctx, connectionPool));
+        app.post("/editUserByID", ctx -> editUserByID(ctx, connectionPool));
 
 
     }
@@ -38,10 +41,10 @@ public class AdminController {
             int id = Integer.parseInt(ctx.formParam("user_id"));
 
             //sends it to
-            AdminMapper.deleteUserByID(id, connectionPool);
+            AdminMapper.deleteCustomerByID(id, connectionPool);
 
             //Refreshes the admin page
-            ctx.redirect("/admin");
+            ctx.redirect("/adminUserCRUD");
         } else {
             //redirect to frontpage, if role is not "admin"
             ctx.redirect("/index");
@@ -60,14 +63,48 @@ public class AdminController {
             int id = Integer.parseInt(ctx.formParam("user_id"));
 
             //sends the new attributes to be edited
-            AdminMapper.editUserByID(id, email, password, address, phoneNumber, role, connectionPool);
+            AdminMapper.editCustomerByID(id, email, password, address, phoneNumber, role, connectionPool);
 
             //Refreshes the admin page
-            ctx.redirect("/admin");
+            ctx.redirect("/adminUserCRUD");
         } else {
             //redirect to frontpage, if role is not "admin"
             ctx.redirect("/index");
         }
     }
+
+    public static void showAllCustomers(Context ctx, ConnectionPool connectionPool) {
+        if (RoleValidator.hasRole(ctx, "admin")) {
+            List<Customer> allCustomers = AdminMapper.getAllRegistered(connectionPool);
+            //Sorts so we only sees customer, not admin or salesperson.
+            allCustomers = allCustomers.stream()
+                    .filter(u -> u.getRole().equalsIgnoreCase("customer"))
+                    .sorted(Comparator.comparing(Customer::getEmail))
+                    .toList();
+            ctx.sessionAttribute("allCustomer", allCustomers);
+            ctx.redirect("/adminUserCRUD");
+        } else {
+            ctx.redirect("/index");
+        }
+    }
+
+    public static void showAllStaff(Context ctx, ConnectionPool connectionPool) {
+        if (RoleValidator.hasRole(ctx, "admin")) {
+            List<Customer> allCustomers = AdminMapper.getAllRegistered(connectionPool);
+            //Sorts so we only sees customer, not admin or salesperson.
+            allCustomers = allCustomers.stream()
+                    .filter(u -> u.getRole().equalsIgnoreCase("admin")
+                            || u.getRole().equalsIgnoreCase("sales"))
+                    .sorted(Comparator.comparing(Customer::getEmail))
+                    .toList();
+            ctx.sessionAttribute("allCustomer", allCustomers);
+            ctx.redirect("/adminUserCRUD");
+        } else {
+            ctx.redirect("/index");
+        }
+    }
+
+/// Material ///
+
 
 }

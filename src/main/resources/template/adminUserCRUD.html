@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>UserCRUD</title>
+    <title>AdminUserCRUD</title>
     <link rel="stylesheet" th:href="@{/css/admin.css}"/>
 </head>
 <body>
@@ -23,15 +23,36 @@
                 <th>Adresse</th>
                 <th>Telefon</th>
                 <th>Rolle</th>
+                <th>Rediger</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="user : ${allUsers}">
-                <td th:text="${user.userId}"></td>
-                <td th:text="${user.email}"></td>
-                <td th:text="${user.address}"></td>
-                <td th:text="${user.phone}"></td>
-                <td th:text="${user.role}"></td>
+            <tr th:each="customer : ${allCustomer}">
+                <td th:text="${customer.id}"></td>
+                <td th:text="${customer.email}"></td>
+                <td th:text="${customer.address}"></td>
+                <td th:text="${customer.phoneNumber}"></td>
+                <td th:text="${customer.role}"></td>
+                <td>
+                    <form th:action="@{/editUserByID}" method="post">
+                        <input type="hidden" name="user_id" th:value="${customer.id}"/>
+                        <input type="text" name="email" placeholder="Ny email"/>
+                        <input type="text" name="address" placeholder="Ny adresse"/>
+                        <input type="text" name="phoneNumber" placeholder="Nyt tlf."/>
+                        <input type="text" name="password" placeholder="Nyt password"/>
+                        <select name="role">
+                            <option value="">Vælg rolle</option>
+                            <option value="kunde">Kunde</option>
+                            <option value="sælger">Sælger</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        <button type="submit">Gem</button>
+                    </form>
+                    <form th:action="@{/deleteUserByID}" method="post">
+                        <input type="hidden" name="user_id" th:value="${customer.id}"/>
+                        <button type="submit">Slet</button>
+                    </form>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -57,13 +78,12 @@
     <!-- Slet bruger -->
     <div class="section">
         <h2>Slet bruger</h2>
-        <form th:action="@{/deleteUser}" method="post">
+        <form th:action="@{/deleteUserByID}" method="post">
             <input type="text" name="user_id" placeholder="Bruger ID"/>
             <button type="submit">Slet</button>
         </form>
     </div>
 
 </div>
-
 </body>
 </html>
