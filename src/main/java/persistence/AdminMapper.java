@@ -35,7 +35,7 @@ public class AdminMapper {
     }
 
     public static void editUserByID(int id, String email, String password, String address,
-                                    int phoneNumber, String role, ConnectionPool connectionPool) {
+                                    String phoneNumber, String role, ConnectionPool connectionPool) {
         // uses coalesce + nullif to revert if felt is null.
         String sql = "UPDATE public.users SET " +
                 "email = COALESCE(NULLIF(?, ''), email), " +
@@ -45,13 +45,12 @@ public class AdminMapper {
                 "role = COALESCE(NULLIF(?, ''), role) " +
                 "WHERE user_id = ?";
 
-
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setString(1, email);
             ps.setString(2, address);
-            ps.setInt(3, phoneNumber);
+            ps.setString(3, phoneNumber);
             ps.setString(4, password);
             ps.setString(5, role);
             ps.setInt(6, id);
