@@ -1,16 +1,14 @@
 package persistence;
 
-import entities.User;
 import exceptions.DatabaseException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AdminMapper {
     public static void createUser(String email, String password, String address,
-                                  int phoneNumber, String name, String role, ConnectionPool connectionPool) {
+                                  int phoneNumber, String role, ConnectionPool connectionPool) {
 
         String sql = "INSERT INTO public.users (email, address, phone, password, role) VALUES (?, ?, ?, ?, ?)";
 
@@ -37,9 +35,16 @@ public class AdminMapper {
     }
 
     public static void editUserByID(int id, String email, String password, String address,
-                                    int phoneNumber, String name, String role, ConnectionPool connectionPool) {
+                                    int phoneNumber, String role, ConnectionPool connectionPool) {
+        // uses coalesce + nullif to revert if felt is null.
+        String sql = "UPDATE public.users SET " +
+                "email = COALESCE(NULLIF(?, ''), email), " +
+                "address = COALESCE(NULLIF(?, ''), address), " +
+                "phone = COALESCE(NULLIF(?, ''), phone), " +
+                "password = COALESCE(NULLIF(?, ''), password), " +
+                "role = COALESCE(NULLIF(?, ''), role) " +
+                "WHERE user_id = ?";
 
-        String sql = "UPDATE public.users SET email = ?, address = ?, phone = ?, password = ?, role = ? WHERE user_id = ?";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -78,4 +83,6 @@ public class AdminMapper {
             throw new DatabaseException("DB fejl: " + e.getMessage() + " (" + msg + ")");
         }
     }
+
+
 }
