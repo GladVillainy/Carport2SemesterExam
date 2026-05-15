@@ -26,7 +26,9 @@ public class AdminController {
         app.post("/createUser", ctx -> createUser(ctx, connectionPool));
         app.post("/deleteUserByID", ctx -> deleteUserByID(ctx, connectionPool));
         app.post("/editUserByID", ctx -> editUserByID(ctx, connectionPool));
-
+        app.post("/showAllCustomers", ctx -> showAllCustomers(ctx, connectionPool));
+        app.post("/showAllStaff", ctx -> showAllStaff(ctx, connectionPool));
+       
 
     }
 
