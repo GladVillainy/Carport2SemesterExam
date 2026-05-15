@@ -36,7 +36,7 @@ public class AdminMapper {
 
     public static void editUserByID(int id, String email, String password, String address,
                                     String phoneNumber, String role, ConnectionPool connectionPool) {
-        // uses coalesce + nullif to revert if felt is null.
+        // uses coalesce + nullif to revert back if felt is null else update with new data.
         String sql = "UPDATE public.users SET " +
                 "email = COALESCE(NULLIF(?, ''), email), " +
                 "address = COALESCE(NULLIF(?, ''), address), " +

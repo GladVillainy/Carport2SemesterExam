@@ -18,7 +18,7 @@ public class AdminController {
                 ctx.redirect("/index");
                 return;
             }
-            ctx.render("admin.html");
+            ctx.render("adminUserCRUD.html");
         });
         app.post("/createUser", ctx -> createUser(ctx, connectionPool));
         app.post("/deleteUserByID", ctx -> deleteUserByID(ctx,connectionPool));
@@ -29,7 +29,7 @@ public class AdminController {
 
     //TODO check if mikkel already made this
     public static void createUser(Context ctx, ConnectionPool connectionPool) {
-        
+
     }
 
     public static void deleteUserByID(Context ctx, ConnectionPool connectionPool) {
