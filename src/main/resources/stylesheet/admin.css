@@ -1,0 +1,47 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+.sections {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.section {
+    flex: 1;
+    border: 1px solid #ccc;
+    padding: 16px;
+}
+
+h2 {
+    margin-bottom: 12px;
+}
+
+input, select {
+    display: block;
+    margin-bottom: 8px;
+    width: 100%;
+    padding: 6px;
+}
+
+button {
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+p.error {
+    color: red;
+}
