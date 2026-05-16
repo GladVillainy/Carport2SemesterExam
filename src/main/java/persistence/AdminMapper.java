@@ -115,25 +115,25 @@ public class AdminMapper {
 
     /// Material ///
 
-    public static void createMaterial(String name, int price, String description, int length, ConnectionPool connectionPool) {
-        String sql = "INSERT INTO public.material (name, price, description, lenght) VALUES (?, ?, ?, ?)";
+    public static void createMaterial(String name, String price, String description, String length, ConnectionPool connectionPool) {
+        String sql = "INSERT INTO public.material (name, price, description, length) VALUES (?, ?, ?, ?)";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setString(1, name);
-            ps.setInt(2, price);
+            ps.setString(2, price);
             ps.setString(3, description);
-            ps.setInt(4, length);
+            ps.setString(4, length);
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected != 1) {
-                throw new DatabaseException("Fejl ved oprettelse af ny bruger");
+                throw new DatabaseException("Fejl ved oprettelse af nyt materiale");
             }
         } catch (SQLException e) {
             String msg = "Der er sket en fejl. Prøv igen";
             if (e.getMessage().startsWith("ERROR: duplicate key value ")) {
-                msg = "E-mail findes allerede. Vælg en anden";
+                msg = "Materialet findes allerede. Vælg en anden";
             }
             throw new DatabaseException("DB fejl: " + e.getMessage() + " (" + msg + ")");
         }
@@ -179,7 +179,7 @@ public class AdminMapper {
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected != 1) {
-                throw new DatabaseException("Fejl opstået ved sletningen af brugeren");
+                throw new DatabaseException("Fejl opstået ved sletningen af materialet");
             }
         } catch (SQLException e) {
             String msg = "Der er sket en fejl. Prøv igen";
