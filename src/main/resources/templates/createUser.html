@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/userLoginCreate.css"/>
+    <title>Opret bruger</title>
+</head>
+<body>
+<div class="container">
+    <h1>Opret bruger</h1>
+    <p th:if="${msg}" th:text="${msg}"></p>
+
+    <form action="/createUser" method="post">
+        <input type="text" name="email" placeholder="Email"/>
+        <input type="password" name="password1" placeholder="Password"/>
+        <input type="password" name="password2" placeholder="Bekræft password"/>
+        <input type="text" name="address" placeholder="Adresse"/>
+        <input type="text" name="phone" placeholder="Telefonnummer"/>
+        <button type="submit">Opret</button>
+    </form>
+
+    <a href="/login">Tilbage til login</a>
+</div>
+</body>
+</html>
