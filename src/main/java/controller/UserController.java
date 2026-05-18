@@ -46,7 +46,7 @@ public class UserController {
                 ctx.render("index.html");
             } catch (DatabaseException e) {
                 ctx.attribute("msg", e.getMessage());
-                ctx.render("createuser.html");
+                ctx.render("createUser.html");
             }
         } else {
             ctx.attribute("msg", "Your passwords do not match. Please try again");
@@ -74,7 +74,7 @@ public class UserController {
             //if a mistakes happends
             ctx.attribute("msg", e.getMessage());
             //directs the user back to createUser
-            ctx.render("createUser.html");
+            ctx.render("login.html");
         }
     }
 
