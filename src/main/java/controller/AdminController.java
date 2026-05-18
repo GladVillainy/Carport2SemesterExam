@@ -15,7 +15,6 @@ import java.util.List;
 
 public class AdminController {
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
-
         //Gatekeeps admin page, if user without permission somehow try to inter
         // it will return it to index
         app.get("/adminUserCRUD", ctx -> {
