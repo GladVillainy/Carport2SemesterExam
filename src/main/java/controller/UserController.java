@@ -73,7 +73,7 @@ public class UserController {
         } catch (DatabaseException e) {
             //if a mistakes happends
             ctx.attribute("msg", e.getMessage());
-            //directs the user back to createUser
+            //directs the user back to login
             ctx.render("login.html");
         }
     }
