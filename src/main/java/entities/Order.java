@@ -5,7 +5,7 @@ package entities;
 import java.util.ArrayList;
 
 public class Order {
-    private ArrayList<Carport> carports = new ArrayList<>();
+    private Carport carport;
     private ArrayList<TotalOrderLines> orderLines = new ArrayList<>();
     private User customer;
 
@@ -14,9 +14,9 @@ public class Order {
     private String status;
 
     //To create
-    public Order(ArrayList<Carport> carports, ArrayList<TotalOrderLines> orderLines,
+    public Order(Carport carport, ArrayList<TotalOrderLines> orderLines,
                  User customer, double totalPrice, String status) {
-        this.carports = carports;
+        this.carport = carport;
         this.orderLines = orderLines;
         this.customer = customer;
         this.totalPrice = totalPrice;
@@ -24,9 +24,9 @@ public class Order {
     }
 
     //To read
-    public Order(ArrayList<Carport> carports, ArrayList<TotalOrderLines> orderLines,
+    public Order(Carport carport, ArrayList<TotalOrderLines> orderLines,
                  User customer, int id, double totalPrice, String status) {
-        this.carports = carports;
+        this.carport = carport;
         this.orderLines = orderLines;
         this.customer = customer;
         this.id = id;
@@ -34,7 +34,6 @@ public class Order {
         this.status = status;
     }
 
-    public ArrayList<Carport> getCarports() { return carports; }
     public ArrayList<TotalOrderLines> getOrderLines() { return orderLines; }
     public User getCustomer() { return customer; }
     public int getId() { return id; }
