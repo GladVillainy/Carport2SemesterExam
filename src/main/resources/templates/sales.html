@@ -2,15 +2,17 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/stylesheet/sales.css"/>
     <title>Sales</title>
 </head>
 <body>
 
-<h1>Ordre oversigt</h1>
+<h1>Oversigt over alle ordrer</h1>
 <!-- Shows error msg if pressent -->
 <p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></p>
 
-<!-- Orders table -->
+<!-- Pending orders -->
+<h2>Pending</h2>
 <table border="1">
     <thead>
     <tr>
@@ -22,8 +24,63 @@
     </tr>
     </thead>
     <tbody>
-    <!-- Loops all orders -->
-    <tr th:each="order : ${orders}">
+    <tr th:each="order : ${allPending}">
+        <td th:text="${order.id}"></td>
+        <td th:text="${order.customer.email}"></td>
+        <td th:text="${order.status}"></td>
+        <td th:text="${order.totalPrice}"></td>
+        <td>
+            <form th:action="@{/orderView}" method="post">
+                <input type="hidden" name="order_id" th:value="${order.id}"/>
+                <button type="submit">Se ordre</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Paid orders -->
+<h2>Paid</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Ordre ID</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Total pris</th>
+        <th>Se ordre</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${allPaid}">
+        <td th:text="${order.id}"></td>
+        <td th:text="${order.customer.email}"></td>
+        <td th:text="${order.status}"></td>
+        <td th:text="${order.totalPrice}"></td>
+        <td>
+            <form th:action="@{/orderView}" method="post">
+                <input type="hidden" name="order_id" th:value="${order.id}"/>
+                <button type="submit">Se ordre</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Approved orders -->
+<h2>Approved</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Ordre ID</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Total pris</th>
+        <th>Se ordre</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${allApproved}">
         <td th:text="${order.id}"></td>
         <td th:text="${order.customer.email}"></td>
         <td th:text="${order.status}"></td>
