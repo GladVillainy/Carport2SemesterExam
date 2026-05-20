@@ -10,8 +10,8 @@
 <!-- Shows error msg if pressent -->
 <p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></p>
 
-<!-- Loops all orders -->
-<div th:each="order : ${orders}">
+<!-- Single order -->
+<div th:if="${order}">
     <div class="order-container">
 
         <!-- Order info -->
