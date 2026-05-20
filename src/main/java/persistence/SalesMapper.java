@@ -84,7 +84,6 @@ public class SalesMapper {
     }
 
 public static void editPrice(ConnectionPool connectionPool, double price, int id){
-    // uses coalesce + nullif to revert back if felt is null else update with new data.
     String sql = "UPDATE public.orders SET total_price = ? WHERE order_id = ?";
 
 
@@ -96,12 +95,32 @@ public static void editPrice(ConnectionPool connectionPool, double price, int id
 
         int rowsAffected = ps.executeUpdate();
         if (rowsAffected != 1) {
-            throw new DatabaseException("Fejl opstået ved ændring af materiale");
+            throw new DatabaseException("Fejl opstået ved ændring af status");
         }
     } catch (SQLException e) {
         String msg = "Der er sket en fejl. Prøv igen";
         throw new DatabaseException("DB fejl: " + e.getMessage() + " (" + msg + ")");
     }
 }
+
+    public static void editStatus(ConnectionPool connectionPool, String status, int id){
+        String sql = "UPDATE public.orders SET status = ? WHERE order_id = ?";
+
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, status);
+            ps.setInt(2, id);
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected != 1) {
+                throw new DatabaseException("Fejl opstået ved ændring af status");
+            }
+        } catch (SQLException e) {
+            String msg = "Der er sket en fejl. Prøv igen";
+            throw new DatabaseException("DB fejl: " + e.getMessage() + " (" + msg + ")");
+        }
+    }
 
 }

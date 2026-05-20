@@ -22,19 +22,8 @@ public class SalesController {
         app.post("/orderView", ctx -> showOneOrder(ctx, connectionPool));
 
         app.post("/editPrice", ctx -> editPriceByID(ctx, connectionPool));
-        /*
-             app.get("/sales", ctx -> {
-            if (!RoleValidator.hasRole(ctx, "sales")) {
-                ctx.redirect("/index");
-            }
-        });
-
-        app.get("/orderView", ctx -> {
-            if (!RoleValidator.hasRole(ctx, "sales")) {
-                ctx.redirect("/index");
-            }
-        });
-         */
+        app.post("/editStatus", ctx -> editStatusByID(ctx, connectionPool));
+        
 
 
     }
@@ -104,6 +93,23 @@ public class SalesController {
         double price = Double.parseDouble(inputPrice);
 
         SalesMapper.editPrice(connectionPool, price, id);
+        ctx.redirect("/orderView");
+    }
+
+    public static void editStatusByID(Context ctx, ConnectionPool connectionPool) {
+        //Checks if user is admin
+        //Verifyes if ID is empty or not a number, to prevent NumberFormatException
+        String idInput = ctx.formParam("order_id");
+        if (InputValidator.isItEmpty(idInput) || !InputValidator.isNumeric(idInput)) {
+            ctx.attribute("errorMessage", "Ugyldigt ordre ID");
+            ctx.redirect("/orderView");
+            return;
+        }
+        int id = Integer.parseInt(idInput);
+
+        String status = ctx.formParam("status");
+
+        SalesMapper.editStatus(connectionPool, status, id);
         ctx.redirect("/orderView");
     }
 }
