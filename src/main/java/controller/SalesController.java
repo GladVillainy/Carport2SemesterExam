@@ -7,6 +7,8 @@ import io.javalin.http.Context;
 import persistence.ConnectionPool;
 import persistence.SalesMapper;
 import validators.InputValidator;
+import validators.RoleValidator;
+
 import java.util.Comparator;
 import java.util.List;
 
@@ -15,16 +17,53 @@ public class SalesController {
         //Gatekeeps sales page, if user without permission somehow try to inter
         // it will return it to index
 
-        app.get("/sales", ctx -> showAllOrders(ctx, connectionPool));
-        app.post("/sales", ctx -> showAllOrders(ctx, connectionPool));
+        app.get("/sales", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "sales") && !RoleValidator.hasRole(ctx, "admin")) {
+                ctx.redirect("/index");
+                return;
+            }
+            showAllOrders(ctx, connectionPool);
+        });
 
-        app.get("/orderView", ctx -> showAllOrders(ctx, connectionPool));
-        app.post("/orderView", ctx -> showOneOrder(ctx, connectionPool));
+        app.post("/sales", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "sales") && !RoleValidator.hasRole(ctx, "admin")) {
+                ctx.redirect("/index");
+                return;
+            }
+            showAllOrders(ctx, connectionPool);
+        });
 
-        app.post("/editPrice", ctx -> editPriceByID(ctx, connectionPool));
-        app.post("/editStatus", ctx -> editStatusByID(ctx, connectionPool));
-        
+        app.get("/orderView", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "sales") && !RoleValidator.hasRole(ctx, "admin")) {
+                ctx.redirect("/index");
+                return;
+            }
+            showAllOrders(ctx, connectionPool);
+        });
 
+        app.post("/orderView", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "sales") && !RoleValidator.hasRole(ctx, "admin")) {
+                ctx.redirect("/index");
+                return;
+            }
+            showOneOrder(ctx, connectionPool);
+        });
+
+        app.post("/editPrice", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "sales") && !RoleValidator.hasRole(ctx, "admin")) {
+                ctx.redirect("/index");
+                return;
+            }
+            editPriceByID(ctx, connectionPool);
+        });
+
+        app.post("/editStatus", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "sales") && !RoleValidator.hasRole(ctx, "admin")) {
+                ctx.redirect("/index");
+                return;
+            }
+            editStatusByID(ctx, connectionPool);
+        });
 
     }
 
@@ -72,7 +111,6 @@ public class SalesController {
     }
 
     public static void editPriceByID(Context ctx, ConnectionPool connectionPool) {
-        //Checks if user is admin
         //Verifyes if ID is empty or not a number, to prevent NumberFormatException
         String idInput = ctx.formParam("order_id");
         if (InputValidator.isItEmpty(idInput) || !InputValidator.isNumeric(idInput)) {
@@ -97,7 +135,6 @@ public class SalesController {
     }
 
     public static void editStatusByID(Context ctx, ConnectionPool connectionPool) {
-        //Checks if user is admin
         //Verifyes if ID is empty or not a number, to prevent NumberFormatException
         String idInput = ctx.formParam("order_id");
         if (InputValidator.isItEmpty(idInput) || !InputValidator.isNumeric(idInput)) {
