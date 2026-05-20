@@ -41,4 +41,7 @@ public class Order {
     public String getStatus() { return status; }
     public void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
     public void setStatus(String status) { this.status = status; }
+    public Carport getCarport() {
+        return carport;
+    }
 }
