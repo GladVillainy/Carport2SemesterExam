@@ -13,7 +13,7 @@
 
 <!-- Pending orders -->
 <h2>Pending</h2>
-<table border="1">
+<table border = "1">
     <thead>
     <tr>
         <th>Ordre ID</th>
@@ -25,6 +25,34 @@
     </thead>
     <tbody>
     <tr th:each="order : ${allPending}">
+        <td th:text="${order.id}"></td>
+        <td th:text="${order.customer.email}"></td>
+        <td th:text="${order.status}"></td>
+        <td th:text="${order.totalPrice}"></td>
+        <td>
+            <form th:action="@{/orderView}" method="post">
+                <input type="hidden" name="order_id" th:value="${order.id}"/>
+                <button type="submit">Se ordre</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Approved orders -->
+<h2>Approved</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Ordre ID</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Total pris</th>
+        <th>Se ordre</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${allApproved}">
         <td th:text="${order.id}"></td>
         <td th:text="${order.customer.email}"></td>
         <td th:text="${order.status}"></td>
@@ -67,33 +95,6 @@
     </tbody>
 </table>
 
-<!-- Approved orders -->
-<h2>Approved</h2>
-<table border="1">
-    <thead>
-    <tr>
-        <th>Ordre ID</th>
-        <th>Email</th>
-        <th>Status</th>
-        <th>Total pris</th>
-        <th>Se ordre</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="order : ${allApproved}">
-        <td th:text="${order.id}"></td>
-        <td th:text="${order.customer.email}"></td>
-        <td th:text="${order.status}"></td>
-        <td th:text="${order.totalPrice}"></td>
-        <td>
-            <form th:action="@{/orderView}" method="post">
-                <input type="hidden" name="order_id" th:value="${order.id}"/>
-                <button type="submit">Se ordre</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
 
 </body>
 </html>
