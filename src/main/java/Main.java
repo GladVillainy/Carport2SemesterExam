@@ -1,6 +1,7 @@
 
 import config.ThymeleafConfig;
 import controller.AdminController;
+import controller.SalesController;
 import controller.UserController;
 import persistence.AdminMapper;
 import persistence.ConnectionPool;
@@ -27,5 +28,6 @@ public class Main {
         // Routing
         AdminController.addRoutes(javApp, connectionPool);
         UserController.addRoutes(javApp, connectionPool);
+        SalesController.addRoutes(javApp, connectionPool);
     }
 }
