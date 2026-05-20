@@ -19,10 +19,21 @@
             <h2>Ordre ID: <span th:text="${order.id}"></span></h2>
             <p>Status: <span th:text="${order.status}"></span></p>
             <p>Total pris: <span th:text="${order.totalPrice}"></span></p>
+            <!-- Edit price form -->
             <form th:action="@{/editPrice}" method="post">
                 <input type="hidden" name="order_id" th:value="${order.id}"/>
                 <input type="text" name="total_price" placeholder="Ny pris"/>
                 <button type="submit">Opdater pris</button>
+            </form>
+            <!-- Edit status form -->
+            <form th:action="@{/editStatus}" method="post">
+                <input type="hidden" name="order_id" th:value="${order.id}"/>
+                <select name="status">
+                    <option value="pending">Pending</option>
+                    <option value="paid">Paid</option>
+                    <option value="approved">Approved</option>
+                </select>
+                <button type="submit">Opdater status</button>
             </form>
         </div>
 
