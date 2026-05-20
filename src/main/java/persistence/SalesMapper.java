@@ -12,7 +12,6 @@ import java.util.List;
 
 public class SalesMapper {
     public static List<Order> showAllOrdersInformation(ConnectionPool connectionPool) {
-
         List<Order> orders = new ArrayList<>();
 
         String sql = "SELECT * FROM public.orders " +
@@ -37,7 +36,7 @@ public class SalesMapper {
                 String address = rs.getString("address");
                 int phone = rs.getInt("phone");
                 //create user
-                User customer = new User(email, address, phone);
+                User customer = new User(address, email, phone);
 
                 //Caport
                 //Gets carport data from db
@@ -83,4 +82,7 @@ public class SalesMapper {
         }
         return orders;
     }
+
+
+
 }
