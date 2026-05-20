@@ -44,3 +44,14 @@ hr {
     border: none;
     border-top: 1px;
 }
+
+button {
+    cursor: pointer;
+    background-color: white;
+    border: 1px solid black;
+    padding: 3px 8px;
+    font-size: 0.8rem;
+}  button:hover {
+    background-color: black;
+    color: white;
+}
