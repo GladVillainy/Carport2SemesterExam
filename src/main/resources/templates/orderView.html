@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>orderView</title>
+    <link rel="stylesheet" href="/stylesheet/orderView.css"/>
+</head>
+<body>
+<h1>Ordre oversigt</h1>
+<!-- Shows error msg if pressent -->
+<p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></p>
+
+<!-- Loops all orders -->
+<div th:each="order : ${orders}">
+    <div class="order-container">
+
+        <!-- Order info -->
+        <div class="order-info">
+            <h2>Ordre ID: <span th:text="${order.id}"></span></h2>
+            <p>Status: <span th:text="${order.status}"></span></p>
+            <p>Total pris: <span th:text="${order.totalPrice}"></span></p>
+        </div>
+
+        <!-- Customer info -->
+        <div class="customer-info">
+            <h3>Kunde</h3>
+            <p>Email: <span th:text="${order.customer.email}"></span></p>
+            <p>Adresse: <span th:text="${order.customer.address}"></span></p>
+            <p>Telefon: <span th:text="${order.customer.phone}"></span></p>
+        </div>
+
+        <!-- Carport info -->
+        <div class="carport-info">
+            <h3>Carport</h3>
+            <p>Bredde: <span th:text="${order.carport.width}"></span></p>
+            <p>Længde: <span th:text="${order.carport.length}"></span></p>
+            <p>Højde: <span th:text="${order.carport.height}"></span></p>
+            <p>Tagtype: <span th:text="${order.carport.roofType}"></span></p>
+            <p>Redskabsrum: <span th:text="${order.carport.shed}"></span></p>
+        </div>
+
+        <!-- Materials table -->
+        <div class="materials-info">
+            <h3>Materialer</h3>
+            <table border="1">
+                <thead>
+                <tr>
+                    <th>Materiale</th>
+                    <th>Antal</th>
+                    <th>Pris</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Loops thru totalOrderLines then orderLines -->
+                <th:block th:each="totalOrderLine : ${order.orderLines}">
+                    <tr th:each="orderLine : ${totalOrderLine.orderLines}">
+                        <td th:text="${orderLine.material.name}"></td>
+                        <td th:text="${orderLine.quantity}"></td>
+                        <td th:text="${orderLine.material.price}"></td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- Placeholder for SVG drawing -->
+    <h3>Carport tegning</h3>
+    <div id="svg-container"></div>
+
+    <hr/>
+</div>
+</body>
+</html>
