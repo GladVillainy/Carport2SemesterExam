@@ -83,6 +83,25 @@ public class SalesMapper {
         return orders;
     }
 
+public static void editPrice(ConnectionPool connectionPool, double price, int id){
+    // uses coalesce + nullif to revert back if felt is null else update with new data.
+    String sql = "UPDATE public.orders SET total_price = ? WHERE order_id = ?";
 
+
+    try (Connection connection = connectionPool.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql)) {
+
+        ps.setDouble(1, price);
+        ps.setInt(2, id);
+
+        int rowsAffected = ps.executeUpdate();
+        if (rowsAffected != 1) {
+            throw new DatabaseException("Fejl opstået ved ændring af materiale");
+        }
+    } catch (SQLException e) {
+        String msg = "Der er sket en fejl. Prøv igen";
+        throw new DatabaseException("DB fejl: " + e.getMessage() + " (" + msg + ")");
+    }
+}
 
 }

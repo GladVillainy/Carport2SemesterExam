@@ -4,10 +4,9 @@ package controller;
 import entities.Order;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-
 import persistence.ConnectionPool;
 import persistence.SalesMapper;
-
+import validators.InputValidator;
 import java.util.Comparator;
 import java.util.List;
 
@@ -18,8 +17,11 @@ public class SalesController {
 
         app.get("/sales", ctx -> showAllOrders(ctx, connectionPool));
         app.post("/sales", ctx -> showAllOrders(ctx, connectionPool));
+
         app.get("/orderView", ctx -> showAllOrders(ctx, connectionPool));
         app.post("/orderView", ctx -> showOneOrder(ctx, connectionPool));
+
+        app.post("/editPrice", ctx -> editPriceByID(ctx, connectionPool));
         /*
              app.get("/sales", ctx -> {
             if (!RoleValidator.hasRole(ctx, "sales")) {
@@ -78,5 +80,30 @@ public class SalesController {
 
         ctx.attribute("order", order);
         ctx.render("orderView.html");
+    }
+
+    public static void editPriceByID(Context ctx, ConnectionPool connectionPool) {
+        //Checks if user is admin
+        //Verifyes if ID is empty or not a number, to prevent NumberFormatException
+        String idInput = ctx.formParam("order_id");
+        if (InputValidator.isItEmpty(idInput) || !InputValidator.isNumeric(idInput)) {
+            ctx.attribute("errorMessage", "Ugyldigt ordre ID");
+            ctx.redirect("/orderView");
+            return;
+        }
+        int id = Integer.parseInt(idInput);
+
+
+        //Verifyes if price isnt empty and isnt a number, to prevent NumberFormatException
+        String inputPrice = ctx.formParam("total_price");
+        if (InputValidator.isItEmpty(inputPrice) || !InputValidator.isNumeric(inputPrice)) {
+            ctx.attribute("errorMessage", "Pris skal udfyldes og være et tal");
+            ctx.redirect("/orderView");
+            return;
+        }
+        double price = Double.parseDouble(inputPrice);
+
+        SalesMapper.editPrice(connectionPool, price, id);
+        ctx.redirect("/orderView");
     }
 }
