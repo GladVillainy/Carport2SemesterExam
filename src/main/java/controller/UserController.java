@@ -25,6 +25,7 @@ public class UserController {
         String password1 = ctx.formParam("password1");
         String password2 = ctx.formParam("password2");
         String address = ctx.formParam("address");
+        String role = "kunde";
 
         //Verifyes if phone isnt empty and isnt a number, to prevent NumberFormatException
         String phoneInput = ctx.formParam("phone");
@@ -41,7 +42,7 @@ public class UserController {
             password = password1;
             //creates user in DB
             try {
-                UserMapper.createUser(email, password, address, phone, connectionPool);
+                UserMapper.createUser(email, password, address, phone, role, connectionPool);
                 String createConfirm = email+" er nu blevet oprettet som bruger!";
                 ctx.attribute("msg", createConfirm);
                 //directs the user to the frontpage
