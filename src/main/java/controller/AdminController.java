@@ -2,11 +2,15 @@ package controller;
 
 import entities.Customer;
 import entities.Material;
+import entities.Order;
+import entities.User;
+import exceptions.DatabaseException;
 import io.javalin.Javalin;
 import persistence.AdminMapper;
 import persistence.ConnectionPool;
+import persistence.SalesMapper;
+import persistence.UserMapper;
 import validators.InputValidator;
-import validators.RoleValidator;
 import io.javalin.http.Context;
 
 import java.util.Comparator;
@@ -14,27 +18,62 @@ import java.util.List;
 
 
 public class AdminController {
+
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
-        //Gatekeeps admin page, if user without permission somehow try to inter
-        // it will return it to index
-        app.get("/adminUserCRUD", ctx -> ctx.render("adminUserCRUD.html"));
+        app.get("/adminUserCRUD", ctx -> showAllRegistered(ctx, connectionPool));
+        app.get("/adminMaterialCRUD", ctx -> seeAllMaterial(ctx, connectionPool));
 
         //User //
-        app.post("/createUser", ctx -> createUser(ctx, connectionPool));
+        app.post("/createUserAdmin", ctx -> createUserAdmin(ctx, connectionPool));
         app.post("/deleteUserByID", ctx -> deleteUserByID(ctx, connectionPool));
-        app.post("/editUserByID", ctx -> editUserByID(ctx, connectionPool));
-        app.post("/showAllCustomers", ctx -> showAllCustomers(ctx, connectionPool));
-        app.post("/showAllStaff", ctx -> showAllStaff(ctx, connectionPool));
 
+        app.post("/editUserView", ctx -> showOneUser(ctx, connectionPool));
+        app.get("/editUserView", ctx -> showOneUser(ctx, connectionPool));
+
+        app.post("/editUserByID", ctx -> editUserByID(ctx, connectionPool));
         //Materiale //
         app.post("/createMaterial", ctx -> createMaterial(ctx, connectionPool));
         app.post("/deleteMaterialByID", ctx -> deleteMaterialByID(ctx, connectionPool));
         app.post("/editMaterialByID", ctx -> editMaterialByID(ctx, connectionPool));
         app.post("/seeAllMaterial", ctx -> seeAllMaterial(ctx, connectionPool));
     }
-    
-    public static void createUser(Context ctx, ConnectionPool connectionPool) {
 
+    public static void createUserAdmin(Context ctx, ConnectionPool connectionPool) {
+        //gets userinput
+        String email = ctx.formParam("email");
+        String password1 = ctx.formParam("password1");
+        String password2 = ctx.formParam("password2");
+        String address = ctx.formParam("address");
+        String role = ctx.formParam("role");
+
+        //Verifyes if phone isnt empty and isnt a number, to prevent NumberFormatException
+        String phoneInput = ctx.formParam("phone");
+        if (!InputValidator.isItEmpty(phoneInput) && !InputValidator.isNumeric(phoneInput)) {
+            ctx.attribute("msg", "Telefonnummer skal være et tal");
+            ctx.render("createUser.html");
+            return;
+        }
+        int phone = Integer.parseInt(phoneInput);
+
+        //checks on user typed the right password
+        String password = "";
+        if (password1.equals(password2)) {
+            password = password1;
+            //creates user in DB
+            try {
+                UserMapper.createUser(email, password, address, phone, role, connectionPool);
+                String createConfirm = email + " er nu blevet oprettet som bruger!";
+                ctx.attribute("msg", createConfirm);
+                //directs the user to the frontpage
+                ctx.redirect("adminUserCRUD");
+            } catch (DatabaseException e) {
+                ctx.attribute("msg", e.getMessage());
+                ctx.render("createUser.html");
+            }
+        } else {
+            ctx.attribute("msg", "Your passwords do not match. Please try again");
+            ctx.render("createUser.html");
+        }
     }
 
     public static void deleteUserByID(Context ctx, ConnectionPool connectionPool) {
@@ -51,20 +90,29 @@ public class AdminController {
         ctx.redirect("/adminUserCRUD");
     }
 
-    public static void editUserByID(Context ctx, ConnectionPool connectionPool) {
-        //Verifyes if ID is empty or not a number, to prevent NumberFormatException
-        String idInput = ctx.formParam("user_id");
-        if (InputValidator.isItEmpty(idInput) || !InputValidator.isNumeric(idInput)) {
-            ctx.attribute("errorMessage", "Ugyldigt bruger ID");
-            ctx.redirect("/adminUserCRUD");
-            return;
-        }
+    public static void showOneUser(Context ctx, ConnectionPool connectionPool) {
+        //Gets user_id from form
+        int userId = Integer.parseInt(ctx.formParam("user_id"));
 
-        //Verifyes if phone isnt empty and isnt a number, to prevent NumberFormatException
-        String phoneNumber = ctx.formParam("phoneNumber");
+        //Gets all users and finds the one with the right id
+        List<Customer> customers = AdminMapper.getAllRegistered(connectionPool);
+        Customer customer = customers.stream()
+                .filter(o -> o.getId() == userId)
+                .findFirst()
+                .orElse(null);
+
+        ctx.attribute("user", customer);
+        ctx.render("editUserView.html");
+    }
+
+    public static void editUserByID(Context ctx, ConnectionPool connectionPool) {
+        int userId = Integer.parseInt(ctx.formParam("user_id"));
+
+        //Verifies if phone isnt empty and isnt a number, to prevent NumberFormatException
+        String phoneNumber = ctx.formParam("phone");
         if (!InputValidator.isItEmpty(phoneNumber) && !InputValidator.isNumeric(phoneNumber)) {
             ctx.attribute("errorMessage", "Telefonnummer skal være et tal");
-            ctx.redirect("/adminUserCRUD");
+            ctx.redirect("/editUserView");
             return;
         }
 
@@ -73,36 +121,28 @@ public class AdminController {
         String password = ctx.formParam("password");
         String address = ctx.formParam("address");
         String role = ctx.formParam("role");
-        int id = Integer.parseInt(idInput);
 
-        AdminMapper.editCustomerByID(id, email, password, address, phoneNumber, role, connectionPool);
+        AdminMapper.editCustomerByID(userId, email, password, address, phoneNumber, role, connectionPool);
         ctx.redirect("/adminUserCRUD");
     }
 
-
-    public static void showAllCustomers(Context ctx, ConnectionPool connectionPool) {
-        //Gets all users and filters so we only see customers
+    public static void showAllRegistered(Context ctx, ConnectionPool connectionPool) {
         List<Customer> allCustomers = AdminMapper.getAllRegistered(connectionPool);
         allCustomers = allCustomers.stream()
-                .filter(u -> u.getRole().equalsIgnoreCase("customer"))
+                .filter(u -> u.getRole().equalsIgnoreCase("kunde"))
                 .sorted(Comparator.comparing(Customer::getEmail))
                 .toList();
-        ctx.sessionAttribute("allCustomer", allCustomers);
-        ctx.redirect("/adminUserCRUD");
+        ctx.attribute("allCustomer", allCustomers);
 
-    }
-
-    public static void showAllStaff(Context ctx, ConnectionPool connectionPool) {
-        //Gets all users and filters so we only see admins and sales
-        List<Customer> allCustomers = AdminMapper.getAllRegistered(connectionPool);
-        allCustomers = allCustomers.stream()
+        List<Customer> allStaff = AdminMapper.getAllRegistered(connectionPool);
+        allStaff = allStaff.stream()
                 .filter(u -> u.getRole().equalsIgnoreCase("admin")
-                        || u.getRole().equalsIgnoreCase("sales"))
+                        || u.getRole().equalsIgnoreCase("sælger"))
                 .sorted(Comparator.comparing(Customer::getEmail))
                 .toList();
-        ctx.sessionAttribute("allCustomer", allCustomers);
-        ctx.redirect("/adminUserCRUD");
+        ctx.attribute("allStaff", allStaff);
 
+        ctx.render("adminUserCRUD.html");
     }
 
     //Materiale //
