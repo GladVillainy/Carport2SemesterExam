@@ -2,77 +2,62 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>AdminMaterialCRUD</title>
-    <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+    <title>Admin - Materialer</title>
 </head>
 <body>
 
-<h1>Admin Panel - Materialer</h1>
-<p class="error" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+<h1>Admin - Materialer</h1>
+<p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></p>
 
-<div class="sections">
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Navn</th>
+        <th>Pris</th>
+        <th>Beskrivelse</th>
+        <th>Længde</th>
+        <th>Rediger</th>
+        <th>Slet</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="material : ${allMaterial}">
+        <td th:text="${material.id}"></td>
+        <td th:text="${material.name}"></td>
+        <td th:text="${material.price}"></td>
+        <td th:text="${material.description}"></td>
+        <td th:text="${material.length}"></td>
+        <td>
+            <form th:action="@{/editMaterialByID}" method="post">
+                <input type="hidden" name="material_id" th:value="${material.id}"/>
+                <input type="text" name="name" placeholder="Nyt navn"/>
+                <input type="text" name="price" placeholder="Ny pris"/>
+                <input type="text" name="description" placeholder="Ny beskrivelse"/>
+                <input type="text" name="length" placeholder="Ny længde"/>
+                <button type="submit">Gem</button>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/deleteMaterialByID}" method="post">
+                <input type="hidden" name="material_id" th:value="${material.id}"/>
+                <button type="submit">Slet</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
-    <!-- See all material -->
-    <div class="section">
-        <h2>Alle materialer</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Navn</th>
-                <th>Pris</th>
-                <th>Beskrivelse</th>
-                <th>Længde</th>
-                <th>Rediger</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="material : ${allMaterial}">
-                <td th:text="${material.id}"></td>
-                <td th:text="${material.name}"></td>
-                <td th:text="${material.price}"></td>
-                <td th:text="${material.description}"></td>
-                <td th:text="${material.length}"></td>
-                <td>
-                    <form th:action="@{/editMaterialByID}" method="post">
-                        <input type="hidden" name="material_id" th:value="${material.id}"/>
-                        <input type="text" name="name" placeholder="Nyt navn"/>
-                        <input type="text" name="price" placeholder="Ny pris"/>
-                        <input type="text" name="description" placeholder="Ny beskrivelse"/>
-                        <input type="text" name="length" placeholder="Ny længde"/>
-                        <button type="submit">Gem</button>
-                    </form>
-                    <form th:action="@{/deleteMaterialByID}" method="post">
-                        <input type="hidden" name="material_id" th:value="${material.id}"/>
-                        <button type="submit">Slet</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+<hr/>
 
-    <!-- create material -->
-    <div class="section">
-        <h2>Opret materiale</h2>
-        <form th:action="@{/createMaterial}" method="post">
-            <input type="text" name="name" placeholder="Navn"/>
-            <input type="text" name="price" placeholder="Pris"/>
-            <input type="text" name="description" placeholder="Beskrivelse"/>
-            <input type="text" name="length" placeholder="Længde"/>
-            <button type="submit">Opret</button>
-        </form>
-    </div>
+<h2>Opret materiale</h2>
+<form action="/createMaterial" method="post">
+    <input type="text" name="name" placeholder="Navn"/><br/>
+    <input type="text" name="price" placeholder="Pris"/><br/>
+    <input type="text" name="description" placeholder="Beskrivelse"/><br/>
+    <input type="text" name="length" placeholder="Længde"/><br/>
+    <button type="submit">Opret</button>
+</form>
 
-    <!-- Delete material -->
-    <div class="section">
-        <h2>Slet materiale</h2>
-        <form th:action="@{/deleteMaterialByID}" method="post">
-            <input type="text" name="material_id" placeholder="Materiale ID"/>
-            <button type="submit">Slet</button>
-        </form>
-    </div>
-
-</div>
 </body>
 </html>
