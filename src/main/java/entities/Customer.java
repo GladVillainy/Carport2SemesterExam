@@ -1,34 +1,25 @@
 package entities;
 
 public class Customer extends User{
-    private int phoneNumber;
     private String role;
+    private String password;
 
+    //To create - needs password to create
 
-    //To create
-    public Customer(String address, String email, int phoneNumber, String role) {
-        super(address, email);
-        this.phoneNumber = phoneNumber;
-        this.role = "Customer";
+    public Customer(String address, String email, int phone, String role, String password) {
+        super(address, email, phone);
+        this.role = role;
+        this.password = password;
     }
 
-    //To read
-    public Customer(int id, String email, String address, int phoneNumber, String role) {
-        super(id, email, address);
-        this.phoneNumber = phoneNumber;
-        this.role = "Customer";
-    }
-
-    public int getPhoneNumber() {
-        return phoneNumber;
+    //To read - does not need to show password
+    public Customer(int id, String email, String address, int phone, String role) {
+        super(id, email, address, phone);
+        this.role = role;
     }
 
     public String getRole() {
         return role;
-    }
-
-    public void setPhoneNumber(int phoneNumber) {
-        this.phoneNumber = phoneNumber;
     }
 
     public void setRole(String role) {

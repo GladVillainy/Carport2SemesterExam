@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/userLoginCreate.css"/>
+    <title>Login</title>
+</head>
+<body>
+<div class = "container">
+<h1>Login</h1>
+<p th:if="${msg}" th:text="${msg}" style="color:red;"></p>
+
+<form action="/login" method="post">
+    <input type="text" name="email" placeholder="Email"/><br/>
+    <input type="password" name="password" placeholder="Password"/><br/>
+    <button type="submit">Login</button>
+</form>
+
+<a href="/createUser">Opret bruger</a>
+</div>
+</body>
+</html>
