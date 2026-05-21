@@ -17,13 +17,10 @@ public class AdminController {
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
         //Gatekeeps admin page, if user without permission somehow try to inter
         // it will return it to index
-        app.get("/adminUserCRUD", ctx -> {
-            if (!RoleValidator.hasRole(ctx, "admin")) {
-                ctx.redirect("/index");
-                return;
-            }
-            ctx.render("adminUserCRUD.html");
-        });
+        app.get("/adminUserCRUD", ctx -> ctx.render("adminUserCRUD.html"));
+
+        //User //
+        app.post("/createUser", ctx -> createUser(ctx, connectionPool));
         app.post("/deleteUserByID", ctx -> deleteUserByID(ctx, connectionPool));
         app.post("/editUserByID", ctx -> editUserByID(ctx, connectionPool));
         app.post("/showAllCustomers", ctx -> showAllCustomers(ctx, connectionPool));
@@ -34,7 +31,6 @@ public class AdminController {
         app.post("/deleteMaterialByID", ctx -> deleteMaterialByID(ctx, connectionPool));
         app.post("/editMaterialByID", ctx -> editMaterialByID(ctx, connectionPool));
         app.post("/seeAllMaterial", ctx -> seeAllMaterial(ctx, connectionPool));
-
     }
     
     public static void createUser(Context ctx, ConnectionPool connectionPool) {
