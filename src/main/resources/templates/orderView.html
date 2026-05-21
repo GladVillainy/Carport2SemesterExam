@@ -29,6 +29,7 @@
             <form th:action="@{/editStatus}" method="post">
                 <input type="hidden" name="order_id" th:value="${order.id}"/>
                 <select name="status">
+                    <!-- option limited to restrict misspelling-->
                     <option value="pending">Pending</option>
                     <option value="paid">Paid</option>
                     <option value="approved">Approved</option>
@@ -37,7 +38,7 @@
             </form>
         </div>
 
-        <!-- Customer info -->
+        <!-- Customer data -->
         <div class="customer-info">
             <h3>Kunde</h3>
             <p>Email: <span th:text="${order.customer.email}"></span></p>
@@ -45,7 +46,7 @@
             <p>Telefon: <span th:text="${order.customer.phone}"></span></p>
         </div>
 
-        <!-- Carport info -->
+        <!-- Carport data-->
         <div class="carport-info">
             <h3>Carport</h3>
             <p>Bredde: <span th:text="${order.carport.width}"></span></p>
@@ -67,7 +68,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Loops thru totalOrderLines then orderLines -->
+                <!-- Loops totalOrderLines then orderLines -->
                 <th:block th:each="totalOrderLine : ${order.orderLines}">
                     <tr th:each="orderLine : ${totalOrderLine.orderLines}">
                         <td th:text="${orderLine.material.name}"></td>
