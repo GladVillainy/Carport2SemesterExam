@@ -6,15 +6,17 @@
     <link rel="stylesheet" th:href="@{/css/carportRequest.css}">
 </head>
 <body>
-<h1>Din forespørgsel</h1>
-<form action="/carportRequest" method="post">
-    <input type="text" name="length" placeholder="Længde"/>
-    <input type="text" name="width" placeholder="Bredde"/>
-    <input type="text" name="height" placeholder="Højde"/>
-    <input type="radio" name="roof type" value="fladt tag"/> Fladt tag
-    <input type="radio" name="roof type" value="høj rejsning"/> Høj rejsning
-    <input type="checkbox" name="shed"/> Skur
-    <button type="submit">Send forspørgsel</button>
-</form>
+<div class="container">
+    <h1>Din forespørgsel</h1>
+    <form action="/carportRequest" method="post">
+        <input type="text" name="length" placeholder="Længde"/>
+        <input type="text" name="width" placeholder="Bredde"/>
+        <input type="text" name="height" placeholder="Højde"/>
+        <input type="radio" name="roof type" value="fladt tag"/> Fladt tag
+        <input type="radio" name="roof type" value="høj rejsning"/> Høj rejsning
+        <input type="checkbox" name="shed"/> Shed
+        <button type="submit">Send forespørgsel</button>
+    </form>
+</div>
 </body>
 </html>
