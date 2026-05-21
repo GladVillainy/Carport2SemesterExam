@@ -12,8 +12,10 @@ public class UserController {
     public static void addRoutes(Javalin app, ConnectionPool connectionPool){
         app.get("/createUser", ctx -> ctx.render("createuser.html"));
         app.post("/createUser", ctx -> createUser(ctx, connectionPool));
+
         app.get("/login", ctx -> ctx.render("login.html"));
         app.post("/login", ctx -> loginUser(ctx, connectionPool));
+
         app.get("/logout", ctx -> logoutUser(ctx));
     }
 

@@ -102,9 +102,10 @@ public class AdminMapper {
                 int id = rs.getInt("user_id");
                 String email = rs.getString("email");
                 String address = rs.getString("address");
-                int phoneNumber = Integer.parseInt(rs.getString("phone"));
+                int phone = Integer.parseInt(rs.getString("phone"));
                 String role = rs.getString("role");
-                registeredList.add(new Customer(id, email, address, phoneNumber, role));
+
+                registeredList.add(new Customer(id, email ,address, phone, role));
             }
         } catch (SQLException e) {
             throw new DatabaseException("DB fejl: " + e.getMessage());
