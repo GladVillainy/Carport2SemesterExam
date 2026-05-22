@@ -30,3 +30,10 @@ select {
     font-size: 0.8rem;
     margin-top: 4px;
 }
+
+.table-wrapper {
+    overflow-x: auto;
+}
+td {
+    white-space: nowrap;
+}
