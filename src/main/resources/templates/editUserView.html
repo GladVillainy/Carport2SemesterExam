@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Rediger bruger</title>
+    <link rel="stylesheet" href="/stylesheet/orderView.css"/>
+    <link rel="stylesheet" href="/stylesheet/globalStaff.css"/>
+</head>
+<body>
+<h1>Rediger bruger</h1>
+<!-- Shows error msg if pressent -->
+<p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></p>
+
+<!-- Single user -->
+<div th:if="${user}">
+    <div class="order-container">
+
+        <!-- User info -->
+        <div class="order-info">
+            <h2>Bruger ID: <span th:text="${user.id}"></span></h2>
+            <p>Email: <span th:text="${user.email}"></span></p>
+            <p>Adresse: <span th:text="${user.address}"></span></p>
+            <p>Telefon: <span th:text="${user.phone}"></span></p>
+            <p>Rolle: <span th:text="${user.role}"></span></p>
+        </div>
+
+        <!-- Edit user form -->
+        <div class="customer-info">
+            <h3>Rediger bruger</h3>
+            <form th:action="@{/editUserByID}" method="post">
+                <input type="hidden" name="user_id" th:value="${user.id}"/>
+                <input type="text" name="email" placeholder="Ny email"/>
+                <input type="text" name="address" placeholder="Ny adresse"/>
+                <input type="text" name="phone" placeholder="Nyt tlf."/>
+                <select name="role">
+                    <option value="">Vælg rolle</option>
+                    <option value="kunde">Kunde</option>
+                    <option value="sælger">Sælger</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <button type="submit">Gem ændringer</button>
+            </form>
+        </div>
+
+    </div>
+    <hr/>
+</div>
+</body>
+</html>

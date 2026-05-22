@@ -36,14 +36,12 @@ public class UserMapper {
         }
     }
 
-    public static void createUser(String email, String password, String address, int phone, ConnectionPool connectionPool) {
+    public static void createUser(String email, String password, String address, int phone, String role, ConnectionPool connectionPool) {
 
         String sql = "INSERT INTO public.users (email, password, address, phone, role) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
-
-            String role = "kunde";
 
             ps.setString(1, email);
             ps.setString(2, password);
