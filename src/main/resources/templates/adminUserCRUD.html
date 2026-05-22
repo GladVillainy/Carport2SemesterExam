@@ -16,40 +16,42 @@
     <!-- User tabel -->
     <div class="section-user">
         <h2>Kunder</h2>
-        <table border="1">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Email</th>
-                <th>Adresse</th>
-                <th>Telefon</th>
-                <th>Rolle</th>
-                <th>Rediger</th>
-                <th>Slet</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="customer : ${allCustomer}">
-                <td th:text="${customer.id}"></td>
-                <td th:text="${customer.email}"></td>
-                <td th:text="${customer.address}"></td>
-                <td th:text="${customer.phone}"></td>
-                <td th:text="${customer.role}"></td>
-                <td>
-                    <form th:action="@{/editUserView}" method="post">
-                        <input type="hidden" name="user_id" th:value="${customer.id}"/>
-                        <button type="submit">Rediger</button>
-                    </form>
-                </td>
-                <td>
-                    <form th:action="@{/deleteUserByID}" method="post">
-                        <input type="hidden" name="user_id" th:value="${customer.id}"/>
-                        <button type="submit">Slet</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="table-wrapper">
+            <table border='1' style='border-collapse:collapse'>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Adresse</th>
+                    <th>Telefon</th>
+                    <th>Rolle</th>
+                    <th>Rediger</th>
+                    <th>Slet</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="customer : ${allCustomer}">
+                    <td th:text="${customer.id}"></td>
+                    <td th:text="${customer.email}"></td>
+                    <td th:text="${customer.address}"></td>
+                    <td th:text="${customer.phone}"></td>
+                    <td th:text="${customer.role}"></td>
+                    <td>
+                        <form th:action="@{/editUserView}" method="post">
+                            <input type="hidden" name="user_id" th:value="${customer.id}"/>
+                            <button type="submit">Rediger</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form th:action="@{/deleteUserByID}" method="post">
+                            <input type="hidden" name="user_id" th:value="${customer.id}"/>
+                            <button type="submit">Slet</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Opret bruger -->
@@ -73,43 +75,43 @@
     <!-- Staff tabel -->
     <div class="section-staff">
         <h2>Personale</h2>
-        <table border="1">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Email</th>
-                <th>Adresse</th>
-                <th>Telefon</th>
-                <th>Rolle</th>
-                <th>Rediger</th>
-                <th>Slet</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="staff : ${allStaff}">
-                <td th:text="${staff.id}"></td>
-                <td th:text="${staff.email}"></td>
-                <td th:text="${staff.address}"></td>
-                <td th:text="${staff.phone}"></td>
-                <td th:text="${staff.role}"></td>
-                <td>
-                    <form th:action="@{/editUserView}" method="post">
-                        <input type="hidden" name="user_id" th:value="${staff.id}"/>
-                        <button type="submit">Rediger</button>
-                    </form>
-                </td>
-                <td>
-                    <form th:action="@{/deleteUserByID}" method="post">
-                        <input type="hidden" name="user_id" th:value="${staff.id}"/>
-                        <button type="submit">Slet</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="table-wrapper">
+            <table border='1' style='border-collapse:collapse'>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Adresse</th>
+                    <th>Telefon</th>
+                    <th>Rolle</th>
+                    <th>Rediger</th>
+                    <th>Slet</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="staff : ${allStaff}">
+                    <td th:text="${staff.id}"></td>
+                    <td th:text="${staff.email}"></td>
+                    <td th:text="${staff.address}"></td>
+                    <td th:text="${staff.phone}"></td>
+                    <td th:text="${staff.role}"></td>
+                    <td>
+                        <form th:action="@{/editUserView}" method="post">
+                            <input type="hidden" name="user_id" th:value="${staff.id}"/>
+                            <button type="submit">Rediger</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form th:action="@{/deleteUserByID}" method="post">
+                            <input type="hidden" name="user_id" th:value="${staff.id}"/>
+                            <button type="submit">Slet</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-
 </div>
-
 </body>
 </html>
