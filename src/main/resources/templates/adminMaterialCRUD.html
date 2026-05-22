@@ -2,6 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/stylesheet/admin.css"/>
+    <link rel="stylesheet" href="/stylesheet/globalStaff.css"/>
     <title>Admin - Materialer</title>
 </head>
 <body>
@@ -9,7 +11,7 @@
 <h1>Admin - Materialer</h1>
 <p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></p>
 
-<table border="1">
+<table border='1' style='border-collapse:collapse'>
     <thead>
     <tr>
         <th>ID</th>
