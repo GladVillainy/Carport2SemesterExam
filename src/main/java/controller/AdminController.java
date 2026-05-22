@@ -12,6 +12,7 @@ import persistence.SalesMapper;
 import persistence.UserMapper;
 import validators.InputValidator;
 import io.javalin.http.Context;
+import validators.RoleValidator;
 
 import java.util.Comparator;
 import java.util.List;
@@ -20,24 +21,57 @@ import java.util.List;
 public class AdminController {
 
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
-        app.get("/adminUserCRUD", ctx -> showAllRegistered(ctx, connectionPool));
-        app.get("/adminMaterialCRUD", ctx -> seeAllMaterial(ctx, connectionPool));
+        app.get("/adminUserCRUD", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "admin")) { ctx.redirect("/index"); return; }
+            showAllRegistered(ctx, connectionPool);
+        });
+        app.get("/adminMaterialCRUD", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "admin")) { ctx.redirect("/index"); return; }
+            seeAllMaterial(ctx, connectionPool);
+        });
 
-        //User //
-        app.post("/createUserAdmin", ctx -> createUserAdmin(ctx, connectionPool));
-        app.post("/deleteUserByID", ctx -> deleteUserByID(ctx, connectionPool));
+        // User //
+        app.post("/createUserAdmin", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "admin")) { ctx.redirect("/index"); return; }
+            createUserAdmin(ctx, connectionPool);
+        });
+        app.post("/deleteUserByID", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "admin")) { ctx.redirect("/index"); return; }
+            deleteUserByID(ctx, connectionPool);
+        });
+        app.post("/editUserView", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "admin")) { ctx.redirect("/index"); return; }
+            showOneUser(ctx, connectionPool);
+        });
+        app.get("/editUserView", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "admin")) { ctx.redirect("/index"); return; }
+            showOneUser(ctx, connectionPool);
+        });
+        app.post("/editUserByID", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "admin")) { ctx.redirect("/index"); return; }
+            editUserByID(ctx, connectionPool);
+        });
 
-        app.post("/editUserView", ctx -> showOneUser(ctx, connectionPool));
-        app.get("/editUserView", ctx -> showOneUser(ctx, connectionPool));
-
-        app.post("/editUserByID", ctx -> editUserByID(ctx, connectionPool));
-        //Materiale //
-        app.post("/createMaterial", ctx -> createMaterial(ctx, connectionPool));
-        app.post("/deleteMaterialByID", ctx -> deleteMaterialByID(ctx, connectionPool));
-        app.post("/editMaterialByID", ctx -> editMaterialByID(ctx, connectionPool));
-        app.post("/seeAllMaterial", ctx -> seeAllMaterial(ctx, connectionPool));
+        // Materiale //
+        app.post("/createMaterial", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "admin")) { ctx.redirect("/index"); return; }
+            createMaterial(ctx, connectionPool);
+        });
+        app.post("/deleteMaterialByID", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "admin")) { ctx.redirect("/index"); return; }
+            deleteMaterialByID(ctx, connectionPool);
+        });
+        app.post("/editMaterialByID", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "admin")) { ctx.redirect("/index"); return; }
+            editMaterialByID(ctx, connectionPool);
+        });
+        app.post("/seeAllMaterial", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "admin")) { ctx.redirect("/index"); return; }
+            seeAllMaterial(ctx, connectionPool);
+        });
     }
 
+    //User//
     public static void createUserAdmin(Context ctx, ConnectionPool connectionPool) {
         //gets userinput
         String email = ctx.formParam("email");
@@ -163,6 +197,7 @@ public class AdminController {
             ctx.render("adminMaterialCRUD.html");
             return;
         }
+        double price = Double.parseDouble(priceInput);
 
         //Verifies if length isnt empty and isnt a number, to prevent NumberFormatException.
         String lengthInput = ctx.formParam("length");
@@ -171,43 +206,38 @@ public class AdminController {
             ctx.render("adminMaterialCRUD.html");
             return;
         }
+        int length = Integer.parseInt(lengthInput);
 
         //Sends data to mapper for creation
-        AdminMapper.createMaterial(name, priceInput, description, lengthInput, connectionPool);
+        AdminMapper.createMaterial(name, price, description, length, connectionPool);
         ctx.redirect("/adminMaterialCRUD");
     }
 
     public static void editMaterialByID(Context ctx, ConnectionPool connectionPool) {
-        //Verifies if material ID is empty or not a number, to prevent NumberFormatException
-        String idInput = ctx.formParam("material_id");
-        if (InputValidator.isItEmpty(idInput) || !InputValidator.isNumeric(idInput)) {
-            ctx.attribute("errorMessage", "Ugyldigt materiale ID");
-            ctx.redirect("/adminMaterialCRUD");
-            return;
-        }
+        int materialID = Integer.parseInt(ctx.formParam("material_id"));
 
         //Verifies if price isnt empty and isnt a number, to prevent NumberFormatException
         String priceInput = ctx.formParam("price");
-        if (!InputValidator.isItEmpty(priceInput) && !InputValidator.isNumeric(priceInput)) {
+        if (!InputValidator.isNumeric(priceInput)) {
             ctx.attribute("errorMessage", "Pris skal være et tal");
             ctx.redirect("/adminMaterialCRUD");
             return;
         }
+        double price = Double.parseDouble(priceInput);
 
         //Verifies if length isnt empty and isnt a number, to prevent NumberFormatException
         String lengthInput = ctx.formParam("length");
-        if (!InputValidator.isItEmpty(lengthInput) && !InputValidator.isNumeric(lengthInput)) {
+        if (!InputValidator.isNumeric(lengthInput)) {
             ctx.attribute("errorMessage", "Længde skal være et tal");
             ctx.redirect("/adminMaterialCRUD");
             return;
         }
+        int length = Integer.parseInt(lengthInput);
 
-        //Gets remaining data and sends to mapper for editing
         String name = ctx.formParam("name");
         String description = ctx.formParam("description");
-        int id = Integer.parseInt(idInput);
 
-        AdminMapper.editMaterialByID(name, priceInput, description, lengthInput, id, connectionPool);
+        AdminMapper.editMaterialByID(name, price, description, length, materialID, connectionPool);
         ctx.redirect("/adminMaterialCRUD");
 
     }
@@ -229,10 +259,12 @@ public class AdminController {
     }
 
     public static void seeAllMaterial(Context ctx, ConnectionPool connectionPool) {
-        //Gets all materials and sends them to session
         List<Material> allMaterial = AdminMapper.seeAllMaterial(connectionPool);
-        ctx.sessionAttribute("allMaterial", allMaterial);
-        ctx.redirect("/adminUserMaterial");
 
+        allMaterial = allMaterial.stream()
+                .sorted(Comparator.comparing(Material::getName))
+                .toList();
+        ctx.attribute("allMaterial", allMaterial);
+        ctx.render("adminMaterialCRUD.html");
     }
 }
