@@ -25,9 +25,9 @@ public class UserMapper {
             if(rs.next()) {
                 int id = rs.getInt("user_id");
                 String address = rs.getString("address");
-                String phone = rs.getString("phone");
+                int phone = rs.getInt("phone");
                 String role = rs.getString("role");
-                return new Customer(id, email, address, Integer.parseInt(phone), role);
+                return new Customer(id, email, address, phone, role);
             } else {
                 throw new DatabaseException("Fejl i login. Prøv igen");
             }
