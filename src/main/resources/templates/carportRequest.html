@@ -15,9 +15,12 @@
         <input type="radio" name="roof type" value="fladt tag"/> Fladt tag
         <input type="radio" name="roof type" value="høj rejsning"/> Høj rejsning
         <input type="checkbox" name="shed"/> Skur
+        <input th:if="${session.currentUser == null}" type="text" name="email" placeholder="E-mail">
+        <input th:if="${session.currentUser == null}" type="text" name="phone" placeholder="Telefonnummer">
+        <input th:if="${session.currentUser == null}" type="text" name="address" placeholder="Adresse">
         <button type="submit">Send forespørgsel</button>
     </form>
-    <p th:if="${msg}" th:text="${msg}"></p>
+    <p th:text="${msg}"></p>
 </div>
 </body>
 </html>
