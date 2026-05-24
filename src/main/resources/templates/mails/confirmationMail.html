@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+</head>
+<body>
+<h1 th:text="${title}">Carport Kvittering</h1>
+<p>Tak for din betaling! Her er din kvittering.</p>
+
+<h3>Materialer</h3>
+<table border='1' style='border-collapse:collapse'>
+    <thead>
+    <tr>
+        <th>Materiale</th>
+        <th>Antal</th>
+        <th>Pris</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="totalOrderLine : ${totalOrderLine}">
+        <tr th:each="orderLine : ${totalOrderLine.orderLines}">
+            <td th:text="${orderLine.material.name}"></td>
+            <td th:text="${orderLine.quantity}"></td>
+            <td th:text="${orderLine.material.price}"></td>
+        </tr>
+    </th:block>
+    </tbody>
+</table>
+
+<p>Total pris: <span th:text="${price}"></span> kr.</p>
+<p>Venlig hilsen, Fog Trælast & Byggecenter</p>
+</body>
+</html>
