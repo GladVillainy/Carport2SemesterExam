@@ -1,7 +1,9 @@
 package controller;
 
+import entities.Carport;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import persistence.CarportMapper;
 import persistence.ConnectionPool;
 import validators.InputValidator;
 
@@ -12,6 +14,9 @@ public class RequestController {
     }
 
     public static void sendRequest(Context ctx, ConnectionPool connectionPool) {
+        //creates user object
+        entities.Customer customer = ctx.sessionAttribute("currentUser");
+
         //gets input from user
         String lengthInput = ctx.formParam("length");
         String widthInput = ctx.formParam("width");
@@ -68,6 +73,27 @@ public class RequestController {
             shed = true;
         }
 
-        ctx.render("carportRequest.html");
+        String email = null;
+        String phoneInput = null;
+        String address = null;
+
+        //sets value to extra input if user is not logged in
+        if(customer == null) {
+            email = ctx.formParam("email");
+            phoneInput = ctx.formParam("phone");
+            address = ctx.formParam("address");
+
+            if(!InputValidator.isDanishPhoneNumber(phoneInput)) {
+                ctx.attribute("msg", "Telefonnummer skal være et 8-cifret tal");
+                ctx.render("carportRequest.html");
+                return;
+            }
+
+            int phone = Integer.parseInt(phoneInput);
+        }
+
+        CarportMapper.createCarport(length, width, height, roofType, shed, connectionPool);
+        ctx.attribute("msg", "Forespørgsel sendt");
+        ctx.render("index.html");
     }
 }

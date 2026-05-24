@@ -16,4 +16,20 @@ public class InputValidator {
             return false;
         }
     }
+
+    public static boolean isDanishPhoneNumber(String checking) {
+        if(!isItEmpty(checking)) {
+            if (checking.length() == 8) {
+                if (isNumeric(checking)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 }

@@ -15,6 +15,24 @@ body {
     width: 300px;
 }
 
+.radiocontainer1 input {
+    position: relative;
+    right: 78px;
+    bottom: 18px;
+}
+
+.radiocontainer2 input {
+    position: relative;
+    right: 54px;
+    bottom: 18px;
+}
+
+.checkboxcontainer input {
+    position: relative;
+    right: 105px;
+    bottom: 18px;
+}
+
 h1 {
     margin-bottom: 20px;
     color: #303030;

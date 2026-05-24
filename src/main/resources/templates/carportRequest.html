@@ -12,9 +12,15 @@
         <input type="text" name="length" placeholder="Længde"/>
         <input type="text" name="width" placeholder="Bredde"/>
         <input type="text" name="height" placeholder="Højde"/>
-        <input type="radio" name="roof type" value="fladt tag"/> Fladt tag
-        <input type="radio" name="roof type" value="høj rejsning"/> Høj rejsning
-        <input type="checkbox" name="shed"/> Skur
+        <div class="radiocontainer1">Fladt tag
+            <input type="radio" name="roof type" value="fladt tag"/>
+        </div>
+        <div class="radiocontainer2">Høj rejsning
+            <input type="radio" name="roof type" value="høj rejsning"/>
+        </div>
+        <div class="checkboxcontainer">Skur
+            <input type="checkbox" name="shed"/>
+        </div>
         <input th:if="${session.currentUser == null}" type="text" name="email" placeholder="E-mail">
         <input th:if="${session.currentUser == null}" type="text" name="phone" placeholder="Telefonnummer">
         <input th:if="${session.currentUser == null}" type="text" name="address" placeholder="Adresse">
