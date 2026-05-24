@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Forespørgsel</title>
+    <link rel="stylesheet" th:href="@{/css/carportRequest.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Din forespørgsel</h1>
+    <form action="/sendRequest" method="post">
+        <input type="text" name="length" placeholder="Længde"/>
+        <input type="text" name="width" placeholder="Bredde"/>
+        <input type="text" name="height" placeholder="Højde"/>
+        <div class="radiocontainer1">Fladt tag
+            <input type="radio" name="roof type" value="fladt tag"/>
+        </div>
+        <div class="radiocontainer2">Høj rejsning
+            <input type="radio" name="roof type" value="høj rejsning"/>
+        </div>
+        <div class="checkboxcontainer">Skur
+            <input type="checkbox" name="shed"/>
+        </div>
+        <input th:if="${session.currentUser == null}" type="text" name="email" placeholder="E-mail">
+        <input th:if="${session.currentUser == null}" type="text" name="phone" placeholder="Telefonnummer">
+        <input th:if="${session.currentUser == null}" type="text" name="address" placeholder="Adresse">
+        <button type="submit">Send forespørgsel</button>
+    </form>
+    <p th:text="${msg}"></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f4f1ec;
+}
+
+.container {
+    background: #fff;
+    padding: 32px;
+    border: 1px solid #ccc;
+    width: 300px;
+}
+
+.radiocontainer1 input {
+    position: relative;
+    right: 78px;
+    bottom: 18px;
+}
+
+.radiocontainer2 input {
+    position: relative;
+    right: 54px;
+    bottom: 18px;
+}
+
+.checkboxcontainer input {
+    position: relative;
+    right: 105px;
+    bottom: 18px;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #303030;
+    text-align: center;
+}
+
+input {
+    display: block;
+    margin-bottom: 12px;
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #1a3a2a;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+p {
+    color: red;
+    margin-bottom: 12px;
+}
+
+a {
+    font-size: 0.9rem;
+    color: #1a3a2a;
+}
