@@ -189,6 +189,7 @@ public class SalesController {
         );
 
         try {
+            SalesMapper.editStatus(connectionPool, "pending", orderId);
             String emailContent = emailSenderHTML.renderTemplate("mails/offer.html", content);
             emailSenderHTML.sendHtmlEmail(email, "Tilbud på din carport fra Fog", emailContent);
         } catch (MessagingException e) {
@@ -221,6 +222,7 @@ public class SalesController {
         );
 
         try {
+            SalesMapper.editStatus(connectionPool, "paid", orderId);
             String emailContent = emailSenderHTML.renderTemplate("mails/confirmationMail.html", content);
             emailSenderHTML.sendHtmlEmail(email, "Carport Kvittering", emailContent);
         } catch (MessagingException e) {
