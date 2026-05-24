@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 public class UserMapper {
 
-    public static User login(String email, String password, ConnectionPool connectionPool) {
+    public static Customer login(String email, String password, ConnectionPool connectionPool) {
 
         String sql = "SELECT * FROM public.users WHERE email = ?";
 
