@@ -3,6 +3,7 @@ package persistence;
 import entities.Customer;
 import entities.User;
 import exceptions.DatabaseException;
+import utility.PasswordUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,21 +14,27 @@ public class UserMapper {
 
     public static User login(String email, String password, ConnectionPool connectionPool) {
 
-        String sql = "SELECT * FROM public.users WHERE email = ? AND password = ?";
+        String sql = "SELECT * FROM public.users WHERE email = ?";
 
         try(Connection connection = connectionPool.getConnection();
             PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setString(1, email);
-            ps.setString(2, password);
 
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
                 int id = rs.getInt("user_id");
+                String hashedPw = rs.getString("password");
                 String address = rs.getString("address");
-                String phone = rs.getString("phone");
+                int phone = rs.getInt("phone");
                 String role = rs.getString("role");
-                return new Customer(id, email, address, Integer.parseInt(phone), role);
+
+                //checks if the password we get from db is the same as the input
+                if(!PasswordUtil.checkPassword(password, hashedPw)){
+                    throw new DatabaseException("Fejl i login. Prøv igen");
+                }
+
+                return new Customer(id, email, address, phone, role);
             } else {
                 throw new DatabaseException("Fejl i login. Prøv igen");
             }
