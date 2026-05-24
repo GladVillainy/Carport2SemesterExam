@@ -18,7 +18,7 @@ public class SalesController {
         // it will return it to index
 
         app.get("/sales", ctx -> {
-            if (!RoleValidator.hasRole(ctx, "sales") && !RoleValidator.hasRole(ctx, "admin")) {
+            if (!RoleValidator.hasRole(ctx, "sælger") && !RoleValidator.hasRole(ctx, "admin")) {
                 ctx.redirect("/index");
                 return;
             }
@@ -26,7 +26,7 @@ public class SalesController {
         });
 
         app.post("/sales", ctx -> {
-            if (!RoleValidator.hasRole(ctx, "sales") && !RoleValidator.hasRole(ctx, "admin")) {
+            if (!RoleValidator.hasRole(ctx, "sælger") && !RoleValidator.hasRole(ctx, "admin")) {
                 ctx.redirect("/index");
                 return;
             }
@@ -34,7 +34,7 @@ public class SalesController {
         });
 
         app.get("/orderView", ctx -> {
-            if (!RoleValidator.hasRole(ctx, "sales") && !RoleValidator.hasRole(ctx, "admin")) {
+            if (!RoleValidator.hasRole(ctx, "sælger") && !RoleValidator.hasRole(ctx, "admin")) {
                 ctx.redirect("/index");
                 return;
             }
@@ -42,7 +42,7 @@ public class SalesController {
         });
 
         app.post("/orderView", ctx -> {
-            if (!RoleValidator.hasRole(ctx, "sales") && !RoleValidator.hasRole(ctx, "admin")) {
+            if (!RoleValidator.hasRole(ctx, "sælger") && !RoleValidator.hasRole(ctx, "admin")) {
                 ctx.redirect("/index");
                 return;
             }
@@ -50,7 +50,7 @@ public class SalesController {
         });
 
         app.post("/editPrice", ctx -> {
-            if (!RoleValidator.hasRole(ctx, "sales") && !RoleValidator.hasRole(ctx, "admin")) {
+            if (!RoleValidator.hasRole(ctx, "sælger") && !RoleValidator.hasRole(ctx, "admin")) {
                 ctx.redirect("/index");
                 return;
             }
@@ -58,7 +58,7 @@ public class SalesController {
         });
 
         app.post("/editStatus", ctx -> {
-            if (!RoleValidator.hasRole(ctx, "sales") && !RoleValidator.hasRole(ctx, "admin")) {
+            if (!RoleValidator.hasRole(ctx, "sælger") && !RoleValidator.hasRole(ctx, "admin")) {
                 ctx.redirect("/index");
                 return;
             }

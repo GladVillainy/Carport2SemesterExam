@@ -6,6 +6,7 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import persistence.ConnectionPool;
 import persistence.UserMapper;
+import utility.PasswordUtil;
 import validators.InputValidator;
 
 public class UserController {
@@ -25,8 +26,9 @@ public class UserController {
         String password1 = ctx.formParam("password1");
         String password2 = ctx.formParam("password2");
         String address = ctx.formParam("address");
+        String role = "kunde";
 
-        //Verifyes if phone isnt empty and isnt a number, to prevent NumberFormatException
+        //Verifies if phone isnt empty and isnt a number, to prevent NumberFormatException
         String phoneInput = ctx.formParam("phone");
         if(!InputValidator.isItEmpty(phoneInput) && !InputValidator.isNumeric(phoneInput)){
             ctx.attribute("msg", "Telefonnummer skal være et tal");
@@ -38,10 +40,11 @@ public class UserController {
         //checks on user typed the right password
         String password = "";
         if(password1.equals(password2)){
-            password = password1;
+            //hashes password
+            password = PasswordUtil.hashPassword(password1);
             //creates user in DB
             try {
-                UserMapper.createUser(email, password, address, phone, connectionPool);
+                UserMapper.createUser(email, password, address, phone, role, connectionPool);
                 String createConfirm = email+" er nu blevet oprettet som bruger!";
                 ctx.attribute("msg", createConfirm);
                 //directs the user to the frontpage

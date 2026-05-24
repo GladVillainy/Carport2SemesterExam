@@ -19,6 +19,19 @@ p {
     margin: 4px 0;
 }
 
+/* Grid layout - 4 sections */
+.grid-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 20px;
+}
+
+/* Each section box */
+.section {
+    border: 1px solid #ccc;
+    padding: 16px;
+}
+
 /* Orders table */
 table {
     width: 100%;
@@ -28,7 +41,7 @@ table {
 
 /* Table cells */
 th, td {
-    border: 1px;
+    border: 1px solid #ccc;
     padding: 8px;
     text-align: left;
 }
@@ -38,20 +51,21 @@ th {
     background-color: #f0f0f0;
 }
 
+/* Input fields */
+input, select {
+    display: block;
+    margin-bottom: 8px;
+    width: 100%;
+    padding: 6px;
+}
+
 /* Spacing between sections */
 hr {
     margin: 24px 0;
     border: none;
-    border-top: 1px;
+    border-top: 1px solid #ccc;
 }
 
-button {
-    cursor: pointer;
-    background-color: white;
-    border: 1px solid black;
-    padding: 3px 8px;
-    font-size: 0.8rem;
-}  button:hover {
-    background-color: black;
-    color: white;
+p.error {
+    color: red;
 }
