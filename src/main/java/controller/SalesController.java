@@ -189,7 +189,7 @@ public class SalesController {
         );
 
         try {
-            String emailContent = emailSenderHTML.renderTemplate("mails/tilbud.html", content);
+            String emailContent = emailSenderHTML.renderTemplate("mails/offer.html", content);
             emailSenderHTML.sendHtmlEmail(email, "Tilbud på din carport fra Fog", emailContent);
         } catch (MessagingException e) {
             ctx.attribute("errorMessage", "Kunne ikke sende mail: " + e.getMessage());
