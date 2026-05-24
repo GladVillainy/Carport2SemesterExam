@@ -2,21 +2,25 @@ package controller;
 
 
 import entities.Order;
+import entities.OrderLine;
+import entities.TotalOrderLines;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import jakarta.mail.MessagingException;
 import persistence.ConnectionPool;
 import persistence.SalesMapper;
+import utility.GmailEmailSenderHTML;
 import validators.InputValidator;
 import validators.RoleValidator;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 public class SalesController {
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
         //Gatekeeps sales page, if user without permission somehow try to inter
         // it will return it to index
-
         app.get("/sales", ctx -> {
             if (!RoleValidator.hasRole(ctx, "sælger") && !RoleValidator.hasRole(ctx, "admin")) {
                 ctx.redirect("/index");
@@ -65,6 +69,21 @@ public class SalesController {
             editStatusByID(ctx, connectionPool);
         });
 
+        app.post("/sendMail", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "sælger") && !RoleValidator.hasRole(ctx, "admin")) {
+                ctx.redirect("/index");
+                return;
+            }
+            sendMail(ctx, connectionPool);
+        });
+
+        app.post("/sendConfirmationMail", ctx -> {
+            if (!RoleValidator.hasRole(ctx, "sælger") && !RoleValidator.hasRole(ctx, "admin")) {
+                ctx.redirect("/index");
+                return;
+            }
+            sendConfirmationMail(ctx, connectionPool);
+        });
     }
 
     public static void showAllOrders(Context ctx, ConnectionPool connectionPool) {
@@ -111,7 +130,7 @@ public class SalesController {
     }
 
     public static void editPriceByID(Context ctx, ConnectionPool connectionPool) {
-        //Verifyes if ID is empty or not a number, to prevent NumberFormatException
+        //Verifies if ID is empty or not a number, to prevent NumberFormatException
         String idInput = ctx.formParam("order_id");
         if (InputValidator.isItEmpty(idInput) || !InputValidator.isNumeric(idInput)) {
             ctx.attribute("errorMessage", "Ugyldigt ordre ID");
@@ -135,7 +154,7 @@ public class SalesController {
     }
 
     public static void editStatusByID(Context ctx, ConnectionPool connectionPool) {
-        //Verifyes if ID is empty or not a number, to prevent NumberFormatException
+        //Verifies if ID is empty or not a number, to prevent NumberFormatException
         String idInput = ctx.formParam("order_id");
         if (InputValidator.isItEmpty(idInput) || !InputValidator.isNumeric(idInput)) {
             ctx.attribute("errorMessage", "Ugyldigt ordre ID");
@@ -147,6 +166,71 @@ public class SalesController {
         String status = ctx.formParam("status");
 
         SalesMapper.editStatus(connectionPool, status, id);
+        ctx.redirect("/orderView");
+    }
+
+    public static void sendMail(Context ctx, ConnectionPool connectionPool) {
+        int orderId = Integer.parseInt(ctx.formParam("order_id"));
+        String message = ctx.formParam("message");
+        GmailEmailSenderHTML emailSenderHTML = new GmailEmailSenderHTML();
+
+        List<Order> allOrders = SalesMapper.showAllOrdersInformation(connectionPool);
+        Order order = allOrders.stream()
+                .filter(o -> o.getId() == orderId)
+                .findFirst()
+                .orElse(null);
+
+        String email = order.getCustomer().getEmail();
+
+        Map<String, Object> content = Map.of(
+                "title", "Carport Tilbud",
+                "message", message,
+                "price", order.getTotalPrice()
+        );
+
+        try {
+            SalesMapper.editStatus(connectionPool, "pending", orderId);
+            String emailContent = emailSenderHTML.renderTemplate("mails/offer.html", content);
+            emailSenderHTML.sendHtmlEmail(email, "Tilbud på din carport fra Fog", emailContent);
+        } catch (MessagingException e) {
+            ctx.attribute("errorMessage", "Kunne ikke sende mail: " + e.getMessage());
+            ctx.render("orderView.html");
+            return;
+        }
+
+        ctx.redirect("/orderView");
+    }
+
+    public static void sendConfirmationMail(Context ctx, ConnectionPool connectionPool) {
+        int orderId = Integer.parseInt(ctx.formParam("order_id"));
+
+        GmailEmailSenderHTML emailSenderHTML = new GmailEmailSenderHTML();
+
+        List<Order> allOrders = SalesMapper.showAllOrdersInformation(connectionPool);
+        Order order = allOrders.stream()
+                .filter(o -> o.getId() == orderId)
+                .findFirst()
+                .orElse(null);
+        String email = order.getCustomer().getEmail();
+
+       List<TotalOrderLines> orderLines = order.getOrderLines();
+
+        Map<String, Object> content = Map.of(
+                "title", "Carport Kvittering",
+                "totalOrderLine", orderLines,
+                "price", order.getTotalPrice()
+        );
+
+        try {
+            SalesMapper.editStatus(connectionPool, "paid", orderId);
+            String emailContent = emailSenderHTML.renderTemplate("mails/confirmationMail.html", content);
+            emailSenderHTML.sendHtmlEmail(email, "Carport Kvittering", emailContent);
+        } catch (MessagingException e) {
+            ctx.attribute("errorMessage", "Kunne ikke sende mail: " + e.getMessage());
+            ctx.render("orderView.html");
+            return;
+        }
+
         ctx.redirect("/orderView");
     }
 }

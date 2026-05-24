@@ -1,5 +1,6 @@
 package controller;
 
+import entities.Customer;
 import entities.User;
 import exceptions.DatabaseException;
 import io.javalin.Javalin;
@@ -66,9 +67,9 @@ public class UserController {
 
         //logs user in
         try {
-            User user = UserMapper.login(email, password, connectionPool);
+            Customer customer = UserMapper.login(email, password, connectionPool);
             // puts session to the current user
-            ctx.sessionAttribute("currentUser", user);
+            ctx.sessionAttribute("currentUser", customer);
 
             //sets currentUserActive to true
             ctx.sessionAttribute("currentUserActive", "true");

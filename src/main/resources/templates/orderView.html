@@ -37,6 +37,12 @@
                 </select>
                 <button type="submit">Opdater status</button>
             </form>
+            <!-- Send tilbud til kunde -->
+            <form th:action="@{/sendMail}" method="post">
+                <input type="hidden" name="order_id" th:value="${order.id}"/>
+                <textarea name="message" placeholder="Skriv en mail til kunden"></textarea>
+                <button type="submit">Send tilbud til kunde</button>
+            </form>
         </div>
 
         <!-- Customer data -->
@@ -60,7 +66,7 @@
         <!-- Materials table -->
         <div class="materials-info">
             <h3>Materialer</h3>
-            <table border="1">
+            <table border='1' style='border-collapse:collapse'>
                 <thead>
                 <tr>
                     <th>Materiale</th>
@@ -79,7 +85,12 @@
                 </th:block>
                 </tbody>
             </table>
+            <form th:action="@{/sendConfirmationMail}" method="post">
+                <input type="hidden" name="order_id" th:value="${order.id}"/>
+                <button type="submit">Send kvittering</button>
+            </form>
         </div>
+
 
     </div>
 
