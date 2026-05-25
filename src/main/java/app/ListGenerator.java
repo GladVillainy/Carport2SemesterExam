@@ -31,7 +31,6 @@ public class ListGenerator {
         //tilføjer det hele til totalorderlines
         TotalOrderLines totalOrderLines = new TotalOrderLines(orderLines);
 
-        System.out.println(totalOrderLines);
         return totalOrderLines;
     }
 
