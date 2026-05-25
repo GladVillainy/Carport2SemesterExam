@@ -1,5 +1,10 @@
 
 import config.ThymeleafConfig;
+import controller.AdminController;
+import controller.RequestController;
+import controller.SalesController;
+import controller.UserController;
+import persistence.AdminMapper;
 import persistence.ConnectionPool;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinThymeleaf;
@@ -9,7 +14,7 @@ public class Main {
     private static final String USER = "postgres";
     private static final String PASSWORD = "postgres";
     private static final String URL = "jdbc:postgresql://localhost:5432/%s?currentSchema=public";
-    private static final String DB = "cupcake";
+    private static final String DB = "ProjektFOG";
 
     private static final ConnectionPool connectionPool = ConnectionPool.getInstance(USER, PASSWORD, URL, DB);
 
@@ -22,6 +27,9 @@ public class Main {
         }).start(7070);
 
         // Routing
-
+        AdminController.addRoutes(javApp, connectionPool);
+        UserController.addRoutes(javApp, connectionPool);
+        SalesController.addRoutes(javApp, connectionPool);
+        RequestController.addRoutes(javApp, connectionPool);
     }
 }

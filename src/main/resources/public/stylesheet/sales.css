@@ -1,0 +1,71 @@
+/* General body styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+/* Main title */
+h1 {
+    margin-bottom: 20px;
+}
+
+/* Headings spacing */
+h2, h3 {
+    margin-bottom: 8px;
+}
+
+/* Text spacing */
+p {
+    margin: 4px 0;
+}
+
+/* Grid layout - 4 sections */
+.grid-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 20px;
+}
+
+/* Each section box */
+.section {
+    border: 1px solid #ccc;
+    padding: 16px;
+}
+
+/* Orders table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+/* Table cells */
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+/* Table header background */
+th {
+    background-color: #f0f0f0;
+}
+
+/* Input fields */
+input, select {
+    display: block;
+    margin-bottom: 8px;
+    width: 100%;
+    padding: 6px;
+}
+
+/* Spacing between sections */
+hr {
+    margin: 24px 0;
+    border: none;
+    border-top: 1px solid #ccc;
+}
+
+p.error {
+    color: red;
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>orderView</title>
+    <link rel="stylesheet" href="/stylesheet/orderView.css"/>
+    <link rel="stylesheet" href="/stylesheet/globalStaff.css"/>
+</head>
+<body>
+<h1>Ordre oversigt</h1>
+<!-- Shows error msg if pressent -->
+<p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></p>
+
+<!-- Single order -->
+<div th:if="${order}">
+    <div class="order-container">
+
+        <!-- Order info -->
+        <div class="order-info">
+            <h2>Ordre ID: <span th:text="${order.id}"></span></h2>
+            <p>Status: <span th:text="${order.status}"></span></p>
+            <p>Total pris: <span th:text="${order.totalPrice}"></span></p>
+            <!-- Edit price form -->
+            <form th:action="@{/editPrice}" method="post">
+                <input type="hidden" name="order_id" th:value="${order.id}"/>
+                <input type="text" name="total_price" placeholder="Ny pris"/>
+                <button type="submit">Opdater pris</button>
+            </form>
+            <!-- Edit status form -->
+            <form th:action="@{/editStatus}" method="post">
+                <input type="hidden" name="order_id" th:value="${order.id}"/>
+                <select name="status">
+                    <!-- option limited to restrict misspelling-->
+                    <option value="pending">Pending</option>
+                    <option value="paid">Paid</option>
+                    <option value="approved">Approved</option>
+                </select>
+                <button type="submit">Opdater status</button>
+            </form>
+            <!-- Send tilbud til kunde -->
+            <form th:action="@{/sendMail}" method="post">
+                <input type="hidden" name="order_id" th:value="${order.id}"/>
+                <textarea name="message" placeholder="Skriv en mail til kunden"></textarea>
+                <button type="submit">Send tilbud til kunde</button>
+            </form>
+        </div>
+
+        <!-- Customer data -->
+        <div class="customer-info">
+            <h3>Kunde</h3>
+            <p>Email: <span th:text="${order.customer.email}"></span></p>
+            <p>Adresse: <span th:text="${order.customer.address}"></span></p>
+            <p>Telefon: <span th:text="${order.customer.phone}"></span></p>
+        </div>
+
+        <!-- Carport data-->
+        <div class="carport-info">
+            <h3>Carport</h3>
+            <p>Bredde: <span th:text="${order.carport.width}"></span></p>
+            <p>Længde: <span th:text="${order.carport.length}"></span></p>
+            <p>Højde: <span th:text="${order.carport.height}"></span></p>
+            <p>Tagtype: <span th:text="${order.carport.roofType}"></span></p>
+            <p>Redskabsrum: <span th:text="${order.carport.shed}"></span></p>
+        </div>
+
+        <!-- Materials table -->
+        <div class="materials-info">
+            <h3>Materialer</h3>
+            <table border='1' style='border-collapse:collapse'>
+                <thead>
+                <tr>
+                    <th>Materiale</th>
+                    <th>Antal</th>
+                    <th>Pris</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Loops totalOrderLines then orderLines -->
+                <th:block th:each="totalOrderLine : ${order.orderLines}">
+                    <tr th:each="orderLine : ${totalOrderLine.orderLines}">
+                        <td th:text="${orderLine.material.name}"></td>
+                        <td th:text="${orderLine.quantity}"></td>
+                        <td th:text="${orderLine.material.price}"></td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+            <form th:action="@{/sendConfirmationMail}" method="post">
+                <input type="hidden" name="order_id" th:value="${order.id}"/>
+                <button type="submit">Send kvittering</button>
+            </form>
+        </div>
+
+
+    </div>
+
+    <!-- Placeholder for SVG drawing -->
+    <h3>Carport tegning</h3>
+    <div id="svg-container"></div>
+
+    <hr/>
+</div>
+</body>
+</html>

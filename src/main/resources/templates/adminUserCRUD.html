@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/stylesheet/admin.css"/>
+    <link rel="stylesheet" href="/stylesheet/globalStaff.css"/>
+    <title>Admin - Brugere</title>
+</head>
+<body>
+
+<h1>Oversigt over alle brugere</h1>
+<p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></p>
+
+<div class="grid-container">
+
+    <!-- User tabel -->
+    <div class="section-user">
+        <h2>Kunder</h2>
+        <div class="table-wrapper">
+            <table border='1' style='border-collapse:collapse'>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Adresse</th>
+                    <th>Telefon</th>
+                    <th>Rolle</th>
+                    <th>Rediger</th>
+                    <th>Slet</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="customer : ${allCustomer}">
+                    <td th:text="${customer.id}"></td>
+                    <td th:text="${customer.email}"></td>
+                    <td th:text="${customer.address}"></td>
+                    <td th:text="${customer.phone}"></td>
+                    <td th:text="${customer.role}"></td>
+                    <td>
+                        <form th:action="@{/editUserView}" method="post">
+                            <input type="hidden" name="user_id" th:value="${customer.id}"/>
+                            <button type="submit">Rediger</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form th:action="@{/deleteUserByID}" method="post">
+                            <input type="hidden" name="user_id" th:value="${customer.id}"/>
+                            <button type="submit">Slet</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Opret bruger -->
+    <div class="section-create">
+        <h2>Opret bruger</h2>
+        <form action="/createUserAdmin" method="post">
+            <input type="text" name="email" placeholder="Email"/>
+            <input type="password" name="password1" placeholder="Password"/>
+            <input type="password" name="password2" placeholder="Bekræft password"/>
+            <input type="text" name="address" placeholder="Adresse"/>
+            <input type="text" name="phone" placeholder="Telefonnummer"/>
+            <select name="role">
+                <option value="kunde">Kunde</option>
+                <option value="sælger">Sælger</option>
+                <option value="admin">Admin</option>
+            </select>
+            <button type="submit">Opret</button>
+        </form>
+    </div>
+
+    <!-- Staff tabel -->
+    <div class="section-staff">
+        <h2>Personale</h2>
+        <div class="table-wrapper">
+            <table border='1' style='border-collapse:collapse'>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Adresse</th>
+                    <th>Telefon</th>
+                    <th>Rolle</th>
+                    <th>Rediger</th>
+                    <th>Slet</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="staff : ${allStaff}">
+                    <td th:text="${staff.id}"></td>
+                    <td th:text="${staff.email}"></td>
+                    <td th:text="${staff.address}"></td>
+                    <td th:text="${staff.phone}"></td>
+                    <td th:text="${staff.role}"></td>
+                    <td>
+                        <form th:action="@{/editUserView}" method="post">
+                            <input type="hidden" name="user_id" th:value="${staff.id}"/>
+                            <button type="submit">Rediger</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form th:action="@{/deleteUserByID}" method="post">
+                            <input type="hidden" name="user_id" th:value="${staff.id}"/>
+                            <button type="submit">Slet</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
