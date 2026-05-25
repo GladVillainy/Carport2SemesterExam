@@ -1,7 +1,7 @@
-package entities;
+package persistence;
 
+import entities.Order;
 import exceptions.DatabaseException;
-import persistence.ConnectionPool;
 
 import java.sql.*;
 

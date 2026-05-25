@@ -12,10 +12,7 @@ import java.sql.SQLException;
 public class OrderLinesMapper {
 
     public static TotalOrderLines createAllOrderLines(int orderId, TotalOrderLines totalOrderLines, ConnectionPool connectionPool){
-        int number = 1;
         for (OrderLine orderLine : totalOrderLines.getOrderLines()) {
-            System.out.println("test" + number);
-            number++;
             int materialId = orderLine.getMaterial().getId();
             int quantity = orderLine.getQuantity();
             createOrderLine(orderId, materialId, quantity, connectionPool);

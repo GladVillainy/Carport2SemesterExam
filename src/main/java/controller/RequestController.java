@@ -3,12 +3,10 @@ package controller;
 import app.ListGenerator;
 import entities.Carport;
 import entities.Order;
-import entities.OrdreMapper;
+import entities.TotalOrderLines;
+import persistence.*;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import persistence.CarportMapper;
-import persistence.ConnectionPool;
-import persistence.ContactMapper;
 import validators.InputValidator;
 
 public class RequestController {
@@ -107,7 +105,11 @@ public class RequestController {
 
         //laver både object til at kunne sende videre, samt samme carport i databasen
         Carport carport = CarportMapper.createCarport(order_id, length, width, height, roofType, shed, connectionPool);
-        ListGenerator.ListGenerator(carport, connectionPool);
+
+        //lave orderlines I databasen knyttet til order_id'et
+        TotalOrderLines totalOrderLines = ListGenerator.ListGenerator(carport, connectionPool);
+        OrderLinesMapper.createAllOrderLines(order_id, totalOrderLines, connectionPool);
+
 
         ctx.attribute("msg", "Forespørgsel sendt");
         ctx.render("index.html");
