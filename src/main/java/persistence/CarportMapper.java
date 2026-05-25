@@ -11,7 +11,6 @@ public class CarportMapper {
 
     public static Carport createCarport(int order_id, int length, int width, int height, String roofType, boolean shed, ConnectionPool connectionPool) {
 
-        //order_id being 1 is a placeholder value
         String sql = "INSERT INTO public.carport (order_id, length, width, height, roof_type, shed) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = connectionPool.getConnection();
