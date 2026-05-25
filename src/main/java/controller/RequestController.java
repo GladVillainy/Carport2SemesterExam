@@ -1,10 +1,12 @@
 package controller;
 
+import app.ListGenerator;
 import entities.Carport;
+import entities.Order;
+import entities.TotalOrderLines;
+import persistence.*;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import persistence.CarportMapper;
-import persistence.ConnectionPool;
 import validators.InputValidator;
 
 public class RequestController {
@@ -92,7 +94,23 @@ public class RequestController {
             int phone = Integer.parseInt(phoneInput);
         }
 
-        CarportMapper.createCarport(length, width, height, roofType, shed, connectionPool);
+        //laver en contactInformation og returnere et id så jeg kan forbinde det til ordren
+        int contactId = ContactMapper.createContactId(customer.getId(),customer.getEmail(), String.valueOf(customer.getPhone()),customer.getAddress(), connectionPool);
+        //laver en ordre i databasen, med et id som kan koble tingene sammen
+        Order order = OrdreMapper.createOrderId(contactId, connectionPool);
+
+        //hiver ordre idet ud af den nye order
+        int order_id = order.getId();
+
+
+        //laver både object til at kunne sende videre, samt samme carport i databasen
+        Carport carport = CarportMapper.createCarport(order_id, length, width, height, roofType, shed, connectionPool);
+
+        //lave orderlines I databasen knyttet til order_id'et
+        TotalOrderLines totalOrderLines = ListGenerator.ListGenerator(carport, connectionPool);
+        OrderLinesMapper.createAllOrderLines(order_id, totalOrderLines, connectionPool);
+
+
         ctx.attribute("msg", "Forespørgsel sendt");
         ctx.render("index.html");
     }

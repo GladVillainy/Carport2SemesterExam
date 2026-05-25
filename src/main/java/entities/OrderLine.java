@@ -33,4 +33,12 @@ public class OrderLine {
     public void setMaterial(Material material) {
         this.material = material;
     }
+
+    @Override
+    public String toString() {
+        return "OrderLine{" + "\n" +
+                "quantity=" + quantity +
+                ", material=" + material.getName() +
+                '}';
+    }
 }

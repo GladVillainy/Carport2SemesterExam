@@ -12,4 +12,11 @@ public class TotalOrderLines {
     public ArrayList<OrderLine> getOrderLines() {
         return orderLines;
     }
+
+    @Override
+    public String toString() {
+        return "TotalOrderLines{" +
+                "orderLines=" + orderLines +
+                '}';
+    }
 }

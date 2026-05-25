@@ -2,6 +2,7 @@ package entities;
 
 
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class Order {
@@ -12,6 +13,13 @@ public class Order {
     private int id;
     private double totalPrice;
     private String status;
+
+    //lav en ny order uden for databasen som test uden den er afhængig af Carport, orderLines, osv osv
+    public Order(int orderId, double totalPrice, String  status) {
+        this.id = orderId;
+        this.totalPrice = totalPrice;
+        this.status = status;
+    }
 
     //To create
     public Order(Carport carport, ArrayList<TotalOrderLines> orderLines,
