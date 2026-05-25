@@ -1,5 +1,6 @@
 package controller;
 
+import app.ListGenerator;
 import entities.Carport;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -92,7 +93,10 @@ public class RequestController {
             int phone = Integer.parseInt(phoneInput);
         }
 
-        CarportMapper.createCarport(length, width, height, roofType, shed, connectionPool);
+
+        //CarportMapper.createCarport(length, width, height, roofType, shed, connectionPool);
+        Carport carport = new Carport(length, width, height, roofType, shed);
+        ListGenerator.ListGenerator(carport, connectionPool);
         ctx.attribute("msg", "Forespørgsel sendt");
         ctx.render("index.html");
     }

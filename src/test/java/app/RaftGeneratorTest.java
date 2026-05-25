@@ -8,7 +8,7 @@ class RaftGeneratorTest {
 
     @Test
     void raftGenerator() {
-        int numberOfRafts = RaftGenerator.raftGenerator(7800);
+        int numberOfRafts = RaftGenerator.raftGenerator(780);
 
         assertEquals(15, numberOfRafts);
         assertNotEquals(20, numberOfRafts);
@@ -16,7 +16,7 @@ class RaftGeneratorTest {
 
     @Test
     void numberOfRafts() {
-        int numberOfRafts = RaftGenerator.raftGenerator(8000);
+        int numberOfRafts = RaftGenerator.raftGenerator(800);
 
         assertEquals(15, numberOfRafts);
         assertNotEquals(20, numberOfRafts);
@@ -24,9 +24,9 @@ class RaftGeneratorTest {
 
     @Test
     void raftLength() {
-        double raftLength = RaftGenerator.raftLength(6000);
+        double raftLength = RaftGenerator.raftLength(600);
 
-        assertEquals(6000, raftLength);
-        assertNotEquals(3000, raftLength);
+        assertEquals(600, raftLength);
+        assertNotEquals(300, raftLength);
     }
 }

@@ -1,12 +1,13 @@
 package app;
 
 public class PoleGenerator {
+    private double standartWidth = 97;
 
 
     public static int poleGenerator(double length, boolean withShed) {
 
-        //omskriver længden til meter
-        length = length/1000;
+        //omskriver længden fra cm til meter
+        length = length/100;
         //siden der ikke er nogen regler for hvornår 3 stolper ikke er nok længere
         //sætter jeg en begrænsning på at distancen mellem stolperne max må være 4 meter
         double numberOfPoles = 6;
@@ -30,5 +31,9 @@ public class PoleGenerator {
     public static double poleLength() {
         //pælene vil altid være i standart 3 meter, da de skal 90 til 110 cm ned i jorden.
         return 3000;
+    }
+
+    public double getStandartWidth() {
+        return standartWidth;
     }
 }

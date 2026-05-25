@@ -10,7 +10,7 @@ public class Carport {
     private boolean shed;
 
     //To create
-    public Carport(int width, int length, int height, String roofType, boolean shed) {
+    public Carport(int length, int width, int height, String roofType, boolean shed) {
         this.width = width;
         this.length = length;
         this.height = height;
