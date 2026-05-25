@@ -1,5 +1,6 @@
 package persistence;
 
+import entities.Carport;
 import exceptions.DatabaseException;
 
 import java.sql.Connection;
@@ -8,19 +9,20 @@ import java.sql.SQLException;
 
 public class CarportMapper {
 
-    public static void createCarport(int length, int width, int height, String roofType, boolean shed, ConnectionPool connectionPool) {
+    public static Carport createCarport(int order_id, int length, int width, int height, String roofType, boolean shed, ConnectionPool connectionPool) {
 
         //order_id being 1 is a placeholder value
-        String sql = "INSERT INTO public.carport (order_id, length, width, height, roof_type, shed) VALUES (1, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO public.carport (order_id, length, width, height, roof_type, shed) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            ps.setInt(1, length);
-            ps.setInt(2, width);
-            ps.setInt(3, height);
-            ps.setString(4, roofType);
-            ps.setBoolean(5, shed);
+            ps.setInt(1, order_id);
+            ps.setInt(2, length);
+            ps.setInt(3, width);
+            ps.setInt(4, height);
+            ps.setString(5, roofType);
+            ps.setBoolean(6, shed);
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected != 1) {
@@ -30,5 +32,6 @@ public class CarportMapper {
             String msg = "Der er sket en fejl. Prøv igen";
             throw new DatabaseException("DB fejl: " + e.getMessage() + " (" + msg + ")");
         }
+        return new Carport(length, width, height, roofType, shed);
     }
 }
