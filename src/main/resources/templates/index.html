@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="/stylesheet/header/header.css">
     <link rel="stylesheet" href="/stylesheet/header/hamburger.css">
     <link rel="stylesheet" href="/stylesheet/header/logo.css">
+
+    <link rel="stylesheet" href="/stylesheet/carportRequest.css">
     <title>FOG</title>
 </head>
 <body>
@@ -24,6 +26,7 @@
                 <h2><a th:if="${session.currentUserActive != 'true'}" href="/createUser">Opret en bruger</a></h2>
                 <div class="currentUserCheck" th:if="${session.currentUserActive}">
                     <h2><a th:href="@{/logout}">Log Out</a></h2>
+                    <h2><a th:href="@{/profil}">Profil</a></h2>
                     <!-- sælger options -->
                     <h2><a th:if="${session.currentUser.role == 'sælger'
                     or session.currentUser.role == 'admin'}"
@@ -49,6 +52,28 @@
         </a>
     </div>
 </header>
+
+<div class="container">
+    <div class="pictureContainer">
+        <img th:src="@{/images/carport.webp}">
+    </div>
+    <div class="inputContainer">
+        <p th:if="${session.msg}" th:text="${session.msg}" style="color:red;"></p>
+        <h1>Din forespørgsel</h1>
+        <form action="/sendRequest" method="post">
+            <input type="text" name="length" placeholder="Længde"/>
+            <input type="text" name="width" placeholder="Bredde"/>
+            <input type="text" name="height" placeholder="Højde"/>
+            <label>Fladt tag <input type="radio" name="roof type" value="fladt tag"/></label>
+            <label>Høj rejsning <input type="radio" name="roof type" value="høj rejsning"/></label>
+            <label>Skur <input type="checkbox" name="shed"/></label>
+            <input th:if="${session.currentUser == null}" type="text" name="email" placeholder="E-mail">
+            <input th:if="${session.currentUser == null}" type="text" name="phone" placeholder="Telefonnummer">
+            <input th:if="${session.currentUser == null}" type="text" name="address" placeholder="Adresse">
+            <button type="submit">Send forespørgsel</button>
+        </form>
+    </div>
+</div>
 
 <script src="/js/hamburger.js"></script>
 </body>
