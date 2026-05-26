@@ -75,27 +75,41 @@ public class RequestController {
             shed = true;
         }
 
-        String email = null;
-        String phoneInput = null;
-        String address = null;
+        String guestEmail = null;
+        String guestPhoneInput = null;
+        String guestAddress = null;
+        int guestPhone = -1;
 
         //sets value to extra input if user is not logged in
         if(customer == null) {
-            email = ctx.formParam("email");
-            phoneInput = ctx.formParam("phone");
-            address = ctx.formParam("address");
+            guestEmail = ctx.formParam("email");
+            guestPhoneInput = ctx.formParam("phone");
+            guestAddress = ctx.formParam("address");
 
-            if(!InputValidator.isDanishPhoneNumber(phoneInput)) {
+            if(!InputValidator.isDanishPhoneNumber(guestPhoneInput)) {
                 ctx.attribute("msg", "Telefonnummer skal være et 8-cifret tal");
                 ctx.render("carportRequest.html");
                 return;
             }
 
-            int phone = Integer.parseInt(phoneInput);
+            guestPhone = Integer.parseInt(guestPhoneInput);
         }
 
-        //laver en contactInformation og returnere et id så jeg kan forbinde det til ordren
-        int contactId = ContactMapper.createContactId(customer.getId(),customer.getEmail(), String.valueOf(customer.getPhone()),customer.getAddress(), connectionPool);
+        //id på contactInformation som skal forbindes til ordren
+        int contactId;
+
+        if (customer != null) {
+            //laver en contactInformation for registreret bruger og sætter id'ets værdi
+            contactId = ContactMapper.createContactId(customer.getId(),customer.getEmail(), String.valueOf(customer.getPhone()),customer.getAddress(), connectionPool);
+        } else {
+            //laver en gæstbruger
+            UserMapper.createUser(guestEmail, null, guestAddress, guestPhone, "guest", connectionPool);
+            //finder den nye gæstbrugers værdi så det kan bruges til at lave en contactInformation
+            int guestId = UserMapper.getIdByEmail(guestEmail, connectionPool);
+            //laver en contactInformation for gæstbruger og sætter id'ets værdi
+            contactId = ContactMapper.createContactId(guestId, guestEmail, String.valueOf(guestPhone), guestAddress, connectionPool);
+        }
+
         //laver en ordre i databasen, med et id som kan koble tingene sammen
         Order order = OrdreMapper.createOrderId(contactId, connectionPool);
 
