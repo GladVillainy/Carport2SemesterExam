@@ -1,6 +1,8 @@
 package controller;
 
 
+import app.CarportSvg;
+import app.Svg;
 import entities.Order;
 import entities.OrderLine;
 import entities.TotalOrderLines;
@@ -15,6 +17,7 @@ import validators.RoleValidator;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class SalesController {
@@ -125,6 +128,11 @@ public class SalesController {
                 .findFirst()
                 .orElse(null);
 
+        //indsætter SVG tegning
+        Locale.setDefault(new Locale("US"));
+        CarportSvg carportSvg = new CarportSvg(order.getCarport());
+
+        ctx.attribute("svg", carportSvg);
         ctx.attribute("order", order);
         ctx.render("orderView.html");
     }
