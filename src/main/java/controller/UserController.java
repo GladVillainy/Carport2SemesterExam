@@ -22,7 +22,7 @@ public class UserController {
 
         app.get("/logout", ctx -> logoutUser(ctx));
 
-        app.get("/profil", ctx -> ctx.render("/profil"));
+        app.get("/profil", ctx -> ctx.render("profil.html"));
         app.post("/profil", ctx -> usersOrder(ctx, connectionPool));
     }
 
@@ -115,6 +115,6 @@ public class UserController {
                         o.getCustomer().getId() == customer.getId())
                 .toList();
         ctx.attribute("userOrders", userOrders);
-        ctx.render("/profil");
+        ctx.redirect("/profil");
     }
 }
