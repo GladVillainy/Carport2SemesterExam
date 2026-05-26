@@ -1,7 +1,6 @@
 package controller;
 
 import io.javalin.Javalin;
-import io.javalin.http.Context;
 import persistence.ConnectionPool;
 
 public class IndexController {
