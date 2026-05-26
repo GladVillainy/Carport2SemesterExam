@@ -1,0 +1,14 @@
+
+/* header alignment */
+.header-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
+    min-height: 80px;
+    background-color: white;
+}
+
+/* margin added so they dont hug corners */
+
+#hamburger { justify-self: start; margin: 10% }
+#logo      { justify-self: center; }

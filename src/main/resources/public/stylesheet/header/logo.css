@@ -1,0 +1,7 @@
+#logo img {
+/*
+min, viewpoint and max
+if you edit max to resize png
+*/
+    height: clamp(20px, 8vw, 60px);
+}
