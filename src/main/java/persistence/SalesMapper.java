@@ -88,8 +88,9 @@ public class SalesMapper {
                 // OrderLine
                 int orderLineId = rs.getInt("order_line_id");
                 int quantity = rs.getInt("quantity");
+                int materialLength = rs.getInt("material_length");
 
-                OrderLine orderLine = new OrderLine(orderLineId, quantity, material);
+                OrderLine orderLine = new OrderLine(orderLineId, quantity, materialLength, material);
 
                 // Tilføj orderline til eksisterende order
                 order.getOrderLines()
