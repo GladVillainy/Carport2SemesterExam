@@ -45,7 +45,9 @@ CREATE TABLE "order_line" (
                               "order_line_id" SERIAL PRIMARY KEY,
                               "order_id" INT NOT NULL REFERENCES "orders" ("order_id"),
                               "material_id" INT NOT NULL REFERENCES "material" ("material_id"),
-                              "quantity" INT NOT NULL
+                              "quantity" INT NOT NULL,
+                              "material_length" INT
+
 );
 
 INSERT INTO "material" ("name", "price", "description", "length")
