@@ -10,6 +10,7 @@ import persistence.AdminMapper;
 import persistence.ConnectionPool;
 import persistence.SalesMapper;
 import persistence.UserMapper;
+import utility.PasswordUtil;
 import validators.InputValidator;
 import io.javalin.http.Context;
 import validators.RoleValidator;
@@ -92,7 +93,7 @@ public class AdminController {
         //checks on user typed the right password
         String password = "";
         if (password1.equals(password2)) {
-            password = password1;
+            password = PasswordUtil.hashPassword(password1);
             //creates user in DB
             try {
                 UserMapper.createUser(email, password, address, phone, role, connectionPool);
