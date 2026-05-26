@@ -1,6 +1,7 @@
 package persistence;
 
 import entities.Customer;
+import entities.GuestCustomer;
 import entities.User;
 import exceptions.DatabaseException;
 import utility.PasswordUtil;
@@ -67,5 +68,26 @@ public class UserMapper {
             }
             throw new DatabaseException("DB fejl: " + e.getMessage() + " (" + msg + ")");
         }
+    }
+
+    public static int getIdByEmail(String email, ConnectionPool connectionPool) {
+
+        String sql = "SELECT user_id, email FROM public.users WHERE email = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int userId = rs.getInt("user_id");
+                return userId;
+            }
+        } catch (SQLException e) {
+            String msg = "Der er sket en fejl. Prøv igen";
+            throw new DatabaseException("DB fejl: " + e.getMessage() + " (" + msg + ")");
+        }
+        return -1;
     }
 }
