@@ -2,10 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="webp" href="/images/Fog.webp">
     <title>Forespørgsel</title>
     <link rel="stylesheet" th:href="@{/css/carportRequest.css}">
+
+    <!--Burgermenu css-->
+    <link rel="stylesheet" href="/stylesheet/header/header.css">
+    <link rel="stylesheet" href="/stylesheet/header/hamburger.css">
+    <link rel="stylesheet" href="/stylesheet/header/logo.css">
 </head>
 <body>
+<header th:replace="~{index :: header}"></header>
 <div class="container">
     <h1>Din forespørgsel</h1>
     <form action="/sendRequest" method="post">
@@ -28,5 +35,6 @@
     </form>
     <p th:text="${msg}"></p>
 </div>
+<script src="/js/hamburger.js"></script>
 </body>
 </html>

@@ -2,12 +2,18 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="webp" href="/images/Fog.webp">
     <link rel="stylesheet" href="/stylesheet/admin.css"/>
     <link rel="stylesheet" href="/stylesheet/globalStaff.css"/>
+
+    <!--Burgermenu css-->
+    <link rel="stylesheet" href="/stylesheet/header/header.css">
+    <link rel="stylesheet" href="/stylesheet/header/hamburger.css">
+    <link rel="stylesheet" href="/stylesheet/header/logo.css">
     <title>Admin - Materialer</title>
 </head>
 <body>
-
+<header th:replace="~{index :: header}"></header>
 <h1>Admin - Materialer</h1>
 <p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></p>
 <div class ="table-wrapper">
@@ -62,4 +68,5 @@
 </form>
 
 </body>
+<script src="/js/hamburger.js"></script>
 </html>
