@@ -4,6 +4,7 @@ public class OrderLine {
     private int id;
     private int quantity;
     private Material material;
+    private int material_length;
 
     //To create
     public OrderLine(int quantity, Material material) {
