@@ -75,7 +75,7 @@ public class UserController {
             ctx.sessionAttribute("currentUserActive", "true");
 
             //directs the user to the frontpage
-            ctx.render("index.html");
+            ctx.redirect("/");
         } catch (DatabaseException e) {
             //if a mistakes happends
             ctx.attribute("msg", e.getMessage());
