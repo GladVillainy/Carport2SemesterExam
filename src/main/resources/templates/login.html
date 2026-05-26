@@ -2,10 +2,17 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/css/userLoginCreate.css"/>
+    <link rel="icon" type="webp" href="/images/Fog.webp">
+    <link rel="stylesheet" href="/stylesheet/userLoginCreate.css"/>
+
+    <!--Burgermenu css-->
+    <link rel="stylesheet" href="/stylesheet/header/header.css">
+    <link rel="stylesheet" href="/stylesheet/header/hamburger.css">
+    <link rel="stylesheet" href="/stylesheet/header/logo.css">
     <title>Login</title>
 </head>
 <body>
+<header th:replace="~{index :: header}"></header>
 <div class = "container">
 <h1>Login</h1>
 <p th:if="${msg}" th:text="${msg}" style="color:red;"></p>
@@ -18,5 +25,6 @@
 
 <a href="/createUser">Opret bruger</a>
 </div>
+<script src="/js/hamburger.js"></script>
 </body>
 </html>

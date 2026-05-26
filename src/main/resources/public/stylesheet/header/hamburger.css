@@ -1,0 +1,55 @@
+
+/* Hamburger menu */
+.hamburger-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.containerHamburger {
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+    width: 25px;
+    height: 25px;
+    margin-top: -20px;
+}
+.bar1, .bar2 {
+    position: absolute;
+    width: 25px;
+    height: 3px;
+    background-color: #333;
+    left: 0;
+    transition: 0.4s;
+}
+
+.bar1 {
+    top: 25%;
+}
+
+.bar2 {
+    top: 75%;
+}
+
+.change .bar1 {
+    top: 50%;
+    transform: rotate(45deg);
+}
+
+.change .bar2 {
+    top: 50%;
+    transform: rotate(-45deg);
+}
+
+#hamburgerMenu {
+    background-color: white;
+    display: none;
+    position: absolute;
+    white-space: nowrap;
+    z-index: 1000;
+    padding: 10px;
+    border: 1px solid black;
+}
+#hamburgerMenu a {
+    text-decoration: none;
+    color: black;
+}

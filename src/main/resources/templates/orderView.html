@@ -2,11 +2,18 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="webp" href="/images/Fog.webp">
     <title>orderView</title>
     <link rel="stylesheet" href="/stylesheet/orderView.css"/>
     <link rel="stylesheet" href="/stylesheet/globalStaff.css"/>
+
+    <!--Burgermenu css-->
+    <link rel="stylesheet" href="/stylesheet/header/header.css">
+    <link rel="stylesheet" href="/stylesheet/header/hamburger.css">
+    <link rel="stylesheet" href="/stylesheet/header/logo.css">
 </head>
 <body>
+<header th:replace="~{index :: header}"></header>
 <h1>Ordre oversigt</h1>
 <!-- Shows error msg if pressent -->
 <p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></p>
@@ -100,5 +107,6 @@
 
     <hr/>
 </div>
+<script src="/js/hamburger.js"></script>
 </body>
 </html>

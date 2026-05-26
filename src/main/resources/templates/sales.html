@@ -2,19 +2,25 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="webp" href="/images/Fog.webp">
     <link rel="stylesheet" href="/stylesheet/sales.css"/>
     <link rel="stylesheet" href="/stylesheet/globalStaff.css"/>
+
+    <!--Burgermenu css-->
+    <link rel="stylesheet" href="/stylesheet/header/header.css">
+    <link rel="stylesheet" href="/stylesheet/header/hamburger.css">
+    <link rel="stylesheet" href="/stylesheet/header/logo.css">
     <title>Sales</title>
 </head>
 <body>
-
+<header th:replace="~{index :: header}"></header>
 <h1>Oversigt over alle ordrer</h1>
 <!-- Shows error msg if pressent -->
 <p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></p>
 
 <!-- Approved orders -->
 <h2>Approved</h2>
-<table border="1">
+<table border='1' style='border-collapse:collapse'>
     <thead>
     <tr>
         <th>Ordre ID</th>
@@ -99,6 +105,6 @@
     </tbody>
 </table>
 
-
+<script src="/js/hamburger.js"></script>
 </body>
 </html>

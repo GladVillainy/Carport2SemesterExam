@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/stylesheet/profil.css">
+    <!--Burgermenu css-->
+    <link rel="stylesheet" href="/stylesheet/header/header.css">
+    <link rel="stylesheet" href="/stylesheet/header/hamburger.css">
+    <link rel="stylesheet" href="/stylesheet/header/logo.css">
+    <title>Profil</title>
+</head>
+<body>
+<header th:replace="~{index :: header}"></header>
+
+<div class="profil-container">
+    <!-- Bruger info -->
+    <div class="user-info">
+        <h2>Mine oplysninger</h2>
+        <p>Email: <span th:text="${session.currentUser.email}"></span></p>
+        <p>Adresse: <span th:text="${session.currentUser.address}"></span></p>
+        <p>Telefon: <span th:text="${session.currentUser.phone}"></span></p>
+    </div>
+
+    <!-- Ordre oversigt -->
+    <div class="orders-info">
+        <h2>Dine ordrer</h2>
+        <table border='1' style='border-collapse:collapse'>
+            <thead>
+            <tr>
+                <th>Ordre ID</th>
+                <th>Status</th>
+                <th>Total pris</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${userOrders}">
+                <td th:text="${order.id}"></td>
+                <td th:text="${order.status}"></td>
+                <td th:text="${order.totalPrice}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="/js/hamburger.js"></script>
+</body>
+</html>
