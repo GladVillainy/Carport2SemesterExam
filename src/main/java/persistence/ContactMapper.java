@@ -10,20 +10,36 @@ import java.sql.SQLException;
 public class ContactMapper {
 
     public static int createContactId(int userId, String email, String phone, String address, ConnectionPool connectionPool) {
-        String sql = "INSERT INTO contact_information (user_id, email, phone, address) VALUES (?, ?, ?, ?) RETURNING contact_information_id";
 
-        try (Connection connection = connectionPool.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection connection = connectionPool.getConnection()) {
 
-            ps.setInt(1, userId);
-            ps.setString(2, email);
-            ps.setString(3, phone);
-            ps.setString(4, address);
+            //prøver at se om der er et eksisterende kontaktId
+            String selectSql = "SELECT contact_information_id FROM contact_information WHERE user_id = ?";
 
-            ResultSet rs = ps.executeQuery();
+            try (PreparedStatement checkPs = connection.prepareStatement(selectSql)) {
+                checkPs.setInt(1, userId);
 
-            if (rs.next()) {
-                return rs.getInt("contact_information_id");
+                ResultSet rs = checkPs.executeQuery();
+
+                if (rs.next()) {
+                    return rs.getInt("contact_information_id");
+                }
+            }
+
+            //hvis ikke overstående return bliver udført, laver vi et nyt Id
+            String insertSql = "INSERT INTO contact_information (user_id, email, phone, address) VALUES (?, ?, ?, ?) RETURNING contact_information_id";
+
+            try (PreparedStatement ps = connection.prepareStatement(insertSql)) {
+                ps.setInt(1, userId);
+                ps.setString(2, email);
+                ps.setString(3, phone);
+                ps.setString(4, address);
+
+                ResultSet rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    return rs.getInt("contact_information_id");
+                }
             }
 
         } catch (SQLException e) {
