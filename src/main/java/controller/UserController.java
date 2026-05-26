@@ -1,17 +1,19 @@
 package controller;
 
 import entities.Customer;
-import entities.User;
+import entities.Order;
 import exceptions.DatabaseException;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import persistence.ConnectionPool;
+import persistence.SalesMapper;
 import persistence.UserMapper;
 import utility.PasswordUtil;
 import validators.InputValidator;
+import java.util.List;
 
 public class UserController {
-    public static void addRoutes(Javalin app, ConnectionPool connectionPool){
+    public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
         app.get("/createUser", ctx -> ctx.render("createuser.html"));
         app.post("/createUser", ctx -> createUser(ctx, connectionPool));
 
@@ -19,7 +21,11 @@ public class UserController {
         app.post("/login", ctx -> loginUser(ctx, connectionPool));
 
         app.get("/logout", ctx -> logoutUser(ctx));
+
+        app.get("/profil", ctx -> ctx.render("/profil"));
+        app.post("/profil", ctx -> usersOrder(ctx, connectionPool));
     }
+
 
     public static void createUser(Context ctx, ConnectionPool connectionPool){
         //gets userinput
@@ -96,5 +102,19 @@ public class UserController {
         ctx.render("index.html");
     }
 
+    public static void usersOrder(Context ctx, ConnectionPool connectionPool){
+        //Find user
+        Customer customer = ctx.sessionAttribute("currentUser");
 
+        //Get all orders
+        List<Order> orders = SalesMapper.showAllOrdersInformation(connectionPool);
+
+        //sort list to find the current users orders
+        List<Order> userOrders = orders.stream()
+                .filter(o ->
+                        o.getCustomer().getId() == customer.getId())
+                .toList();
+        ctx.attribute("userOrders", userOrders);
+        ctx.render("/profil");
+    }
 }
