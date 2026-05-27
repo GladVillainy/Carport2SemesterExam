@@ -7,9 +7,10 @@ public class OrderLine {
     private int material_Length;
 
     //To create
-    public OrderLine(int quantity, Material material) {
+    public OrderLine(int quantity, Material material, int material_Length) {
         this.quantity = quantity;
         this.material = material;
+        this.material_Length = material_Length;
     }
 
     //To read
@@ -35,6 +36,10 @@ public class OrderLine {
         return material;
     }
 
+    public int getMaterialLength() {
+        return material_Length;
+    }
+
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
@@ -49,9 +54,5 @@ public class OrderLine {
                 "quantity=" + quantity +
                 ", material=" + material.getName() +
                 '}';
-    }
-
-    public int getMaterialLength() {
-        return material_Length;
     }
 }

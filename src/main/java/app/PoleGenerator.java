@@ -30,7 +30,7 @@ public class PoleGenerator {
 
     public static double poleLength() {
         //pælene vil altid være i standart 3 meter, da de skal 90 til 110 cm ned i jorden.
-        return 3000;
+        return 300;
     }
 
     public double getStandartWidth() {

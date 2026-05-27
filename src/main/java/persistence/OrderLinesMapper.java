@@ -15,14 +15,15 @@ public class OrderLinesMapper {
         for (OrderLine orderLine : totalOrderLines.getOrderLines()) {
             int materialId = orderLine.getMaterial().getId();
             int quantity = orderLine.getQuantity();
-            createOrderLine(orderId, materialId, quantity, connectionPool);
+            int materialLength = orderLine.getMaterialLength();
+            createOrderLine(orderId, materialId, quantity, materialLength, connectionPool);
         }
         return totalOrderLines;
     }
 
-    public static void createOrderLine(int orderId, int materialId, int quantity, ConnectionPool connectionPool) {
+    public static void createOrderLine(int orderId, int materialId, int quantity, int materialLength, ConnectionPool connectionPool) {
 
-        String sql = "INSERT INTO order_line (order_id, material_id, quantity) VALUES (?, ?, ?) RETURNING order_line_id ";
+        String sql = "INSERT INTO order_line (order_id, material_id, quantity, material_length) VALUES (?, ?, ?, ?) RETURNING order_line_id ";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -30,6 +31,7 @@ public class OrderLinesMapper {
             ps.setInt(1, orderId);
             ps.setInt(2, materialId);
             ps.setInt(3, quantity);
+            ps.setInt(4, materialLength);
 
             ResultSet rs = ps.executeQuery();
 
