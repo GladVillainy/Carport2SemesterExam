@@ -20,11 +20,13 @@
     </thead>
     <tbody>
     <tr>
-        <td th:text="${carport.length}"></td>
-        <td th:text="${carport.width}"></td>
-        <td th:text="${carport.height}"></td>
-        <td th:text="${carport.roofType}"></td>
-        <td th:text="${carport.shed}"></td>
+        <td th:text="${carport.length} + ' cm'"></td>
+        <td th:text="${carport.width} + ' cm'"></td>
+        <td th:text="${carport.height} + ' cm'"></td>
+        <td th:if="${carport.roofType == 'flatRoof'}">Fladt tag</td>
+        <td th:if="${carport.roofType == 'highRise'}">Høj rejsning</td>
+        <td th:if="${carport.shed}">Ja</td>
+        <td th:if="${!carport.shed}">Nej</td>
     </tr>
     </tbody>
 </table>
