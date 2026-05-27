@@ -13,6 +13,7 @@
     <tr>
         <th>Materiale</th>
         <th>Antal</th>
+        <th>Længde</th>
         <th>Pris</th>
     </tr>
     </thead>
@@ -21,6 +22,7 @@
         <tr th:each="orderLine : ${totalOrderLine.orderLines}">
             <td th:text="${orderLine.material.name}"></td>
             <td th:text="${orderLine.quantity}"></td>
+            <td th:text="${orderLine.materialLength}"></td>
             <td th:text="${orderLine.material.price}"></td>
         </tr>
     </th:block>
