@@ -4,10 +4,15 @@ import app.ListGenerator;
 import entities.Carport;
 import entities.Order;
 import entities.TotalOrderLines;
+import jakarta.mail.MessagingException;
 import persistence.*;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import utility.GmailEmailSenderHTML;
 import validators.InputValidator;
+
+import java.util.List;
+import java.util.Map;
 
 public class RequestController {
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
@@ -124,8 +129,33 @@ public class RequestController {
         TotalOrderLines totalOrderLines = ListGenerator.ListGenerator(carport, connectionPool);
         OrderLinesMapper.createAllOrderLines(order_id, totalOrderLines, connectionPool);
 
+        if (customer != null) {
+            sendRequestApprovalMail(customer.getEmail(), carport.getId(), ctx, connectionPool);
+        } else {
+            sendRequestApprovalMail(guestEmail, carport.getId(), ctx, connectionPool);
+        }
 
         ctx.attribute("msg", "Forespørgsel sendt");
         ctx.render("index.html");
+    }
+
+    public static void sendRequestApprovalMail(String email, int carportId, Context ctx, ConnectionPool connectionPool) {
+
+        GmailEmailSenderHTML emailSenderHTML = new GmailEmailSenderHTML();
+
+        Carport carport = CarportMapper.getCarportById(carportId, connectionPool);
+
+        Map<String, Object> content = Map.of(
+                "title", "Carport Forespørgsel",
+                "carport", carport
+        );
+
+        try {
+            String emailContent = emailSenderHTML.renderTemplate("mails/requestApprovalMail.html", content);
+            emailSenderHTML.sendHtmlEmail(email, "Carport Forespørgsel", emailContent);
+        } catch (MessagingException e) {
+            ctx.attribute("errorMessage", "Kunne ikke sende mail: " + e.getMessage());
+            ctx.render("index.html");
+        }
     }
 }

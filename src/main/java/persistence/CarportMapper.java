@@ -35,4 +35,31 @@ public class CarportMapper {
         }
         return null;
     }
+
+    public static Carport getCarportById(int id, ConnectionPool connectionPool) {
+
+        Carport c = null;
+
+        String sql = "SELECT * FROM public.carport WHERE carport_id = ?";
+
+        try(Connection connection = connectionPool.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            try(ResultSet rs = ps.executeQuery()) {
+                if(rs.next()) {
+                    int length = rs.getInt("length");
+                    int width = rs.getInt("width");
+                    int height = rs.getInt("height");
+                    String roofType = rs.getString("roof_type");
+                    boolean shed = rs.getBoolean("shed");
+                    c = new Carport(id, length, width, height, roofType, shed);
+                }
+            }
+        } catch(SQLException e) {
+            throw new DatabaseException("DB fejl: " + e.getMessage());
+        }
+        return c;
+    }
 }
