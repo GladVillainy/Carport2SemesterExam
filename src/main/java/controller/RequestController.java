@@ -11,7 +11,6 @@ import io.javalin.http.Context;
 import utility.GmailEmailSenderHTML;
 import validators.InputValidator;
 
-import java.util.List;
 import java.util.Map;
 
 public class RequestController {
@@ -116,7 +115,7 @@ public class RequestController {
         }
 
         //laver en ordre i databasen, med et id som kan koble tingene sammen
-        Order order = OrdreMapper.createOrderId(contactId, connectionPool);
+        Order order = OrderMapper.createOrderId(contactId, connectionPool);
 
         //hiver ordre idet ud af den nye order
         int order_id = order.getId();
