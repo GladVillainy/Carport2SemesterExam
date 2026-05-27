@@ -222,12 +222,17 @@ public class SalesController {
         String email = order.getCustomer().getEmail();
 
        List<TotalOrderLines> orderLines = order.getOrderLines();
+        Locale.setDefault(new Locale("US"));
+        CarportSvg carportSvg = new CarportSvg(order.getCarport());
 
         Map<String, Object> content = Map.of(
                 "title", "Carport Kvittering",
                 "totalOrderLine", orderLines,
-                "price", order.getTotalPrice()
+                "price", order.getTotalPrice(),
+                "svg", carportSvg
         );
+
+
 
         try {
             SalesMapper.editStatus(connectionPool, "paid", orderId);
