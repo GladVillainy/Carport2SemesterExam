@@ -61,9 +61,9 @@
         <p th:if="${session.msg}" th:text="${session.msg}" style="color:red;"></p>
         <h1>Din forespørgsel</h1>
         <form action="/sendRequest" method="post">
-            <input type="text" name="length" placeholder="Længde"/>
-            <input type="text" name="width" placeholder="Bredde"/>
-            <input type="text" name="height" placeholder="Højde"/>
+            <input type="text" name="length" placeholder="Længde (cm)"/>
+            <input type="text" name="width" placeholder="Bredde (cm)"/>
+            <input type="text" name="height" placeholder="Højde (cm)"/>
             <label>Fladt tag <input type="radio" name="roof type" value="fladt tag"/></label>
             <label>Høj rejsning <input type="radio" name="roof type" value="høj rejsning"/></label>
             <label>Skur <input type="checkbox" name="shed"/></label>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+</head>
+<body>
+<h1 th:text="${title}">Carport Forespørgsel</h1>
+<p>Tak for din bestilling! Her kan du se din forespørgsel.</p>
+
+<h3>Dine valg</h3>
+<table border='1' style='border-collapse:collapse'>
+    <thead>
+    <tr>
+        <th>Længde</th>
+        <th>Bredde</th>
+        <th>Højde</th>
+        <th>Tagtype</th>
+        <th>Skur</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td th:text="${carport.length} + ' cm'"></td>
+        <td th:text="${carport.width} + ' cm'"></td>
+        <td th:text="${carport.height} + ' cm'"></td>
+        <td th:if="${carport.roofType == 'flatRoof'}">Fladt tag</td>
+        <td th:if="${carport.roofType == 'highRise'}">Høj rejsning</td>
+        <td th:if="${carport.shed}">Ja</td>
+        <td th:if="${!carport.shed}">Nej</td>
+    </tr>
+    </tbody>
+</table>
+
+<p>Venlig hilsen, Fog Trælast & Byggecenter</p>
+</body>
+</html>

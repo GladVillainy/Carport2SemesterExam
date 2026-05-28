@@ -4,10 +4,14 @@ import app.ListGenerator;
 import entities.Carport;
 import entities.Order;
 import entities.TotalOrderLines;
+import jakarta.mail.MessagingException;
 import persistence.*;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import utility.GmailEmailSenderHTML;
 import validators.InputValidator;
+
+import java.util.Map;
 
 public class RequestController {
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
@@ -111,7 +115,7 @@ public class RequestController {
         }
 
         //laver en ordre i databasen, med et id som kan koble tingene sammen
-        Order order = OrdreMapper.createOrderId(contactId, connectionPool);
+        Order order = OrderMapper.createOrderId(contactId, connectionPool);
 
         //hiver ordre idet ud af den nye order
         int order_id = order.getId();
@@ -126,8 +130,33 @@ public class RequestController {
 
         //updater anslået pris til at matche den generet totalOrderlines
 
+        if (customer != null) {
+            sendRequestApprovalMail(customer.getEmail(), carport.getId(), ctx, connectionPool);
+        } else {
+            sendRequestApprovalMail(guestEmail, carport.getId(), ctx, connectionPool);
+        }
 
         ctx.attribute("msg", "Forespørgsel sendt");
         ctx.render("index.html");
+    }
+
+    public static void sendRequestApprovalMail(String email, int carportId, Context ctx, ConnectionPool connectionPool) {
+
+        GmailEmailSenderHTML emailSenderHTML = new GmailEmailSenderHTML();
+
+        Carport carport = CarportMapper.getCarportById(carportId, connectionPool);
+
+        Map<String, Object> content = Map.of(
+                "title", "Carport Forespørgsel",
+                "carport", carport
+        );
+
+        try {
+            String emailContent = emailSenderHTML.renderTemplate("mails/requestApprovalMail.html", content);
+            emailSenderHTML.sendHtmlEmail(email, "Carport Forespørgsel", emailContent);
+        } catch (MessagingException e) {
+            ctx.attribute("errorMessage", "Kunne ikke sende mail: " + e.getMessage());
+            ctx.render("index.html");
+        }
     }
 }

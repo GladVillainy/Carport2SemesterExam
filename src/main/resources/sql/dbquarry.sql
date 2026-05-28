@@ -27,7 +27,7 @@ CREATE TABLE "orders" (
                           "order_id" SERIAL PRIMARY KEY,
                           "contact_information_id" INT NOT NULL REFERENCES "contact_information" ("contact_information_id"),
                           "total_price" DOUBLE PRECISION NOT NULL DEFAULT '25000',
-                          "status" TEXT NOT NULL DEFAULT 'pending',
+                          "status" TEXT NOT NULL DEFAULT 'approved',
                           "created_at" TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP)
 );
 
