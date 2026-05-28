@@ -5,10 +5,10 @@ import exceptions.DatabaseException;
 
 import java.sql.*;
 
-public class OrdreMapper {
+public class OrderMapper {
 
     public static Order createOrderId(int contactInformationId, ConnectionPool connectionPool){
-        String sql = "INSERT INTO orders (contact_information_id) VALUES (?) RETURNING order_id, contact_information_id, total_price, status, created_at";
+        String sql = "INSERT INTO orders (contact_information_id, status) VALUES (?, 'approved') RETURNING order_id, contact_information_id, total_price, status, created_at";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
