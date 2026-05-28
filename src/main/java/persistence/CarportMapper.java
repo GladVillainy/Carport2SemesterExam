@@ -54,7 +54,7 @@ public class CarportMapper {
                     int height = rs.getInt("height");
                     String roofType = rs.getString("roof_type");
                     boolean shed = rs.getBoolean("shed");
-                    c = new Carport(id, length, width, height, roofType, shed);
+                    c = new Carport(id,  width, length, height, roofType, shed);
                 }
             }
         } catch(SQLException e) {
