@@ -16,7 +16,6 @@ public class CarportSvg {
     public CarportSvg(Carport carport) {
         this.width = carport.getWidth();
         this.length = carport.getLength();
-        System.out.println(length);
         this.amountBeams = BeamGenerator.beamGenerator();
         this.beamLength = (BeamGenerator.beamLength(width));
         this.amountRafts = RaftGenerator.raftGenerator(length);
