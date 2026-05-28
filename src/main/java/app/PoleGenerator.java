@@ -1,7 +1,8 @@
 package app;
 
 public class PoleGenerator {
-    private double standartWidth = 97;
+    private static double standartWidth = 97;
+    private static double disOfPoles;
 
 
     public static int poleGenerator(double length, boolean withShed) {
@@ -23,7 +24,13 @@ public class PoleGenerator {
             //hvis skur tilføjes, tilføjes der 4, så der er 6 i alt,
             //da man kan genanvende 2 fra carporten, plus 1 ekstra til at lave døren til skuret
             numberOfPoles = numberOfPoles + 4 + 1;
+
+            //logik til at sætte ny disOfPole
         }
+
+        //laver disOfPole om til cm igen
+        disOfPole = disOfPole*100;
+        disOfPoles = disOfPole;
         return (int) numberOfPoles;
 
     }
@@ -35,5 +42,9 @@ public class PoleGenerator {
 
     public double getStandartWidth() {
         return standartWidth;
+    }
+
+    public static double getDisOfPoles() {
+        return disOfPoles;
     }
 }

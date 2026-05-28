@@ -16,11 +16,11 @@ public class SalesMapper {
     public static List<Order> showAllOrdersInformation(ConnectionPool connectionPool) {
         List<Order> orders;
 
-        String sql = "SELECT * FROM public.orders " +
+        String sql = "SELECT *, carport.length as carport_length FROM public.orders " +
                 "JOIN public.order_line ON orders.order_id = order_line.order_id " +
                 "JOIN public.material ON order_line.material_id = material.material_id " +
                 "JOIN public.contact_information ON orders.contact_information_id = contact_information.contact_information_id " +
-                "JOIN public.carport ON orders.order_id = carport.order_id";
+                "JOIN public.carport ON orders.order_id = carport.order_id" ;
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -46,7 +46,7 @@ public class SalesMapper {
                     // Carport
                     int carportId = rs.getInt("carport_id");
                     int width = rs.getInt("width");
-                    int length = rs.getInt("length");
+                    int length = rs.getInt("carport_length");
                     int height = rs.getInt("height");
                     String roofType = rs.getString("roof_type");
                     boolean shed = rs.getBoolean("shed");
