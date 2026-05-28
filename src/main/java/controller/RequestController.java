@@ -128,6 +128,8 @@ public class RequestController {
         TotalOrderLines totalOrderLines = ListGenerator.ListGenerator(carport, connectionPool);
         OrderLinesMapper.createAllOrderLines(order_id, totalOrderLines, connectionPool);
 
+        //updater anslået pris til at matche den generet totalOrderlines
+
         if (customer != null) {
             sendRequestApprovalMail(customer.getEmail(), carport.getId(), ctx, connectionPool);
         } else {

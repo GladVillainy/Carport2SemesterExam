@@ -1,6 +1,8 @@
 package controller;
 
 
+import app.CarportSvg;
+import app.Svg;
 import entities.Order;
 import entities.OrderLine;
 import entities.TotalOrderLines;
@@ -15,6 +17,7 @@ import validators.RoleValidator;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class SalesController {
@@ -125,6 +128,11 @@ public class SalesController {
                 .findFirst()
                 .orElse(null);
 
+        //indsætter SVG tegning
+        Locale.setDefault(new Locale("US"));
+        CarportSvg carportSvg = new CarportSvg(order.getCarport());
+
+        ctx.attribute("svg", carportSvg);
         ctx.attribute("order", order);
         ctx.render("orderView.html");
     }
@@ -214,12 +222,17 @@ public class SalesController {
         String email = order.getCustomer().getEmail();
 
        List<TotalOrderLines> orderLines = order.getOrderLines();
+        Locale.setDefault(new Locale("US"));
+        CarportSvg carportSvg = new CarportSvg(order.getCarport());
 
         Map<String, Object> content = Map.of(
                 "title", "Carport Kvittering",
                 "totalOrderLine", orderLines,
-                "price", order.getTotalPrice()
+                "price", order.getTotalPrice(),
+                "svg", carportSvg
         );
+
+
 
         try {
             SalesMapper.editStatus(connectionPool, "paid", orderId);

@@ -8,11 +8,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SalesMapper {
     public static List<Order> showAllOrdersInformation(ConnectionPool connectionPool) {
-        List<Order> orders = new ArrayList<>();
+        List<Order> orders;
 
         String sql = "SELECT * FROM public.orders " +
                 "JOIN public.order_line ON orders.order_id = order_line.order_id " +
@@ -24,59 +26,80 @@ public class SalesMapper {
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ResultSet rs = ps.executeQuery();
+            Map<Integer, Order> orderMap = new HashMap<>();
+
             while (rs.next()) {
-                //Order
+
                 int orderId = rs.getInt("order_id");
-                double totalPrice = rs.getDouble("total_price");
-                String status = rs.getString("status");
 
-                //User
-                //gets user data from db
-                String email = rs.getString("email");
-                String address = rs.getString("address");
-                int phone = rs.getInt("phone");
-                //create user
-                User customer = new User(address, email, phone);
+                Order order = orderMap.get(orderId);
 
-                //Caport
-                //Gets carport data from db
-                int carportId = rs.getInt("carport_id");
-                int width = rs.getInt("width");
-                int length = rs.getInt("length");
-                int height = rs.getInt("height");
-                String roofType = rs.getString("roof_type");
-                boolean shed = rs.getBoolean("shed");
-                //creates caport object
-                Carport carport = new Carport(carportId, width, length, height, roofType, shed);
+                if (order == null) {
 
-                //Material
-                //Gets material from db
+                    // User
+                    String email = rs.getString("email");
+                    String address = rs.getString("address");
+                    int phone = rs.getInt("phone");
+
+                    User customer = new User(address, email, phone);
+
+                    // Carport
+                    int carportId = rs.getInt("carport_id");
+                    int width = rs.getInt("width");
+                    int length = rs.getInt("length");
+                    int height = rs.getInt("height");
+                    String roofType = rs.getString("roof_type");
+                    boolean shed = rs.getBoolean("shed");
+
+                    Carport carport = new Carport(carportId, width, length, height, roofType, shed);
+
+                    // Order info
+                    double totalPrice = rs.getDouble("total_price");
+                    String status = rs.getString("status");
+
+                    // Opret tom liste
+                    ArrayList<OrderLine> orderLines = new ArrayList<>();
+                    TotalOrderLines totalOrderLines = new TotalOrderLines(orderLines);
+
+                    ArrayList<TotalOrderLines> totalOrderLinesList = new ArrayList<>();
+                    totalOrderLinesList.add(totalOrderLines);
+
+                    order = new Order(
+                            carport,
+                            totalOrderLinesList,
+                            customer,
+                            orderId,
+                            totalPrice,
+                            status
+                    );
+
+                    orderMap.put(orderId, order);
+                }
+
+                // Material
                 int materialId = rs.getInt("material_id");
                 String name = rs.getString("name");
                 double price = rs.getDouble("price");
                 String description = rs.getString("description");
                 int matLength = rs.getInt("length");
-                //creates material object
+
                 Material material = new Material(materialId, name, price, description, matLength);
 
-                //Orderline
-                //Gets orderline data from db
+                // OrderLine
                 int orderLineId = rs.getInt("order_line_id");
                 int quantity = rs.getInt("quantity");
-                OrderLine orderLine = new OrderLine(orderLineId, quantity, material);
+                int materialLength = rs.getInt("material_length");
 
-                //Creates list and adds orderline
-                ArrayList<OrderLine> orderLines = new ArrayList<>();
-                orderLines.add(orderLine);
+                OrderLine orderLine = new OrderLine(orderLineId, quantity, materialLength, material);
 
-                //Wraps orderlines in TotalOrderLines and adds to list
-                TotalOrderLines totalOrderLines = new TotalOrderLines(orderLines);
-                ArrayList<TotalOrderLines> totalOrderLinesList = new ArrayList<>();
-                totalOrderLinesList.add(totalOrderLines);
-
-
-                orders.add(new Order(carport, totalOrderLinesList, customer, orderId, totalPrice, status));
+                // Tilføj orderline til eksisterende order
+                order.getOrderLines()
+                        .get(0)
+                        .getOrderLines()
+                        .add(orderLine);
             }
+
+            orders = new ArrayList<>(orderMap.values());
         } catch (SQLException e) {
             throw new DatabaseException("DB fejl: " + e.getMessage());
         }

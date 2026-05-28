@@ -4,11 +4,13 @@ public class OrderLine {
     private int id;
     private int quantity;
     private Material material;
+    private int material_Length;
 
     //To create
-    public OrderLine(int quantity, Material material) {
+    public OrderLine(int quantity, Material material, int material_Length) {
         this.quantity = quantity;
         this.material = material;
+        this.material_Length = material_Length;
     }
 
     //To read
@@ -18,12 +20,24 @@ public class OrderLine {
         this.material = material;
     }
 
+    //tilføjet Material_length
+    public OrderLine(int id, int quantity, int material_length, Material material) {
+        this.id = id;
+        this.quantity = quantity;
+        this.material = material;
+        this.material_Length = material_length;
+    }
+
     public int getQuantity() {
         return quantity;
     }
 
     public Material getMaterial() {
         return material;
+    }
+
+    public int getMaterialLength() {
+        return material_Length;
     }
 
     public void setQuantity(int quantity) {
