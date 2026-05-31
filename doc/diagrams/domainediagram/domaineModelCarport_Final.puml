@@ -1,0 +1,56 @@
+@startuml domainModel
+
+!pragma layout smetana
+
+skinparam nodesep 40
+skinparam ranksep 50
+
+class User {
+    email
+    address
+    phone
+}
+
+class Customer {
+    role
+    password
+}
+
+class GuestCustomer {
+}
+
+class Order {
+    totalPrice
+    status
+}
+
+class Carport {
+    width
+    length
+    height
+    roofType
+    shed
+}
+
+class OrderLine {
+    quantity
+    materialLength
+}
+
+class Material {
+    name
+    price
+    description
+    length
+}
+
+User <|-- Customer
+User <|-- GuestCustomer
+
+Customer "1" -- "0..*" Order : places
+GuestCustomer "1" -- "0..*" Order : places
+Order "1" -- "1" Carport : contains
+Order "1" -- "1..*" OrderLine : consists of
+OrderLine "1..*" -- "1" Material : references
+
+@enduml
