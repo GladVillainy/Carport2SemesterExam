@@ -115,8 +115,7 @@ public class AdminMapper {
 
     }
 
-    public static void editMaterialByID(String name, Double price, String description, int length, int id, ConnectionPool connectionPool) {
-        // uses coalesce + nullif to revert back if felt is null else update with new data.
+    public static void editMaterialByID(String name, Double price, String description, Integer length, int id, ConnectionPool connectionPool) {
         String sql = "UPDATE public.material SET " +
                 "name = COALESCE(NULLIF(?, ''), name), " +
                 "price = COALESCE(?, price), " +
@@ -127,10 +126,12 @@ public class AdminMapper {
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
+            // setObject allows null values, enabling COALESCE to keep the existing value if the field is empty
+
             ps.setString(1, name);
-            ps.setDouble(2, price);
+            ps.setObject(2, price);
             ps.setString(3, description);
-            ps.setInt(4, length);
+            ps.setObject(4, length);
             ps.setInt(5, id);
 
             int rowsAffected = ps.executeUpdate();
@@ -141,7 +142,6 @@ public class AdminMapper {
             String msg = "Der er sket en fejl. Prøv igen";
             throw new DatabaseException("DB fejl: " + e.getMessage() + " (" + msg + ")");
         }
-
     }
 
     public static void deleteMaterialByID(int id, ConnectionPool connectionPool) {
