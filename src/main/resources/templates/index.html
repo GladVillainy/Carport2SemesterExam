@@ -64,7 +64,7 @@
             <input type="text" name="length" placeholder="Længde (cm)"/>
             <input type="text" name="width" placeholder="Bredde (cm)"/>
             <input type="text" name="height" placeholder="Højde (cm)"/>
-            <label>Fladt tag <input type="radio" name="roof type" value="fladt tag"/></label>
+            <label>Fladt tag <input type="radio" name="roof type" value="fladt tag" checked/></label>
             <label>Høj rejsning <input type="radio" name="roof type" value="høj rejsning"/></label>
             <label>Skur <input type="checkbox" name="shed"/></label>
             <input th:if="${session.currentUser == null}" type="text" name="email" placeholder="E-mail">
