@@ -4,12 +4,12 @@ CREATE TABLE "users" (
                          "address" TEXT NOT NULL,
                          "phone" TEXT,
                          "password" TEXT,
-                         "role" TEXT NOT NULL DEFAULT 'guest'
+                         "role" TEXT NOT NULL DEFAULT 'kunde'
 );
 
 CREATE TABLE "contact_information" (
                                        "contact_information_id" SERIAL PRIMARY KEY,
-                                       "user_id" INT NOT NULL REFERENCES "users" ("user_id"),
+                                       "user_id" INT NOT NULL UNIQUE REFERENCES "users" ("user_id"),
                                        "email" TEXT NOT NULL,
                                        "phone" TEXT NOT NULL,
                                        "address" TEXT NOT NULL
@@ -26,9 +26,8 @@ CREATE TABLE "material" (
 CREATE TABLE "orders" (
                           "order_id" SERIAL PRIMARY KEY,
                           "contact_information_id" INT NOT NULL REFERENCES "contact_information" ("contact_information_id"),
-                          "total_price" DOUBLE PRECISION NOT NULL DEFAULT '25000',
-                          "status" TEXT NOT NULL DEFAULT 'approved',
-                          "created_at" TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP)
+                          "total_price" DOUBLE PRECISION,
+                          "status" TEXT NOT NULL DEFAULT 'approved'
 );
 
 CREATE TABLE "carport" (
@@ -47,7 +46,6 @@ CREATE TABLE "order_line" (
                               "material_id" INT NOT NULL REFERENCES "material" ("material_id"),
                               "quantity" INT NOT NULL,
                               "material_length" INT
-
 );
 
 INSERT INTO "material" ("name", "price", "description", "length")

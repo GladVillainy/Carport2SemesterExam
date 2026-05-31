@@ -1,0 +1,430 @@
+@startuml classdiagramCarport
+
+!pragma layout smetana
+
+title Fog Carport – Class Diagram
+
+' Due to the diagram being so large, we needed to use some tricks, to make it more compact.
+' skiparam nodesep controlls the horizontal spacing between classes
+' skiparam ranksep controlls the vertical spacing between rows of classes
+' -down[hidden]-> places a hidden arrow that forces plantuml to place the classes under each other
+
+
+skinparam nodesep 15
+skinparam ranksep 30
+
+' ─────────────────────────────────────────
+' ENTITIES
+' ─────────────────────────────────────────
+package entities {
+
+    class User {
+        - id : int
+        - email : String
+        - address : String
+        - phone : int
+        + getId() : int
+        + getEmail() : String
+        + getAddress() : String
+        + getPhone() : int
+    }
+
+    class Customer {
+        - role : String
+        - password : String
+        + getRole() : String
+        + setRole(role : String) : void
+    }
+
+    class GuestCustomer {
+    }
+
+'inheritance — DatabaseException extends RuntimeException.
+    User <|-- Customer
+    User <|-- GuestCustomer
+
+    class Carport {
+        - id : int
+        - width : int
+        - length : int
+        - height : int
+        - roofType : String
+        - shed : boolean
+        + getId() : int
+        + getWidth() : int
+        + getLength() : int
+    }
+
+    class Order {
+        - id : int
+        - totalPrice : double
+        - status : String
+        + getId() : int
+        + getTotalPrice() : double
+        + getStatus() : String
+    }
+
+    class ListOfOrders {
+        + getListOfOrders() : ArrayList<Order>
+    }
+
+' composition if the parent is deleted, the child is deleted with it.
+    Order "1" *-- "1" Carport
+    Order "1" *-- "1" User
+    ListOfOrders "1" *-- "0..*" Order
+
+    Carport -down[hidden]-> TotalOrderLines
+    Order -down[hidden]-> OrderLine
+
+    class TotalOrderLines {
+        + getOrderLines() : ArrayList<OrderLine>
+    }
+
+    class OrderLine {
+        - id : int
+        - quantity : int
+        - material_Length : int
+        + getQuantity() : int
+        + getMaterial() : Material
+    }
+
+    class Material {
+        - id : int
+        - name : String
+        - price : double
+        - description : String
+        - length : int
+        + getId() : int
+        + getName() : String
+        + getPrice() : double
+    }
+
+' composition — if the parent is deleted, the child is deleted with it.
+    Order "1" *-- "0..*" TotalOrderLines
+    TotalOrderLines "1" *-- "0..*" OrderLine
+
+
+    OrderLine "1" --> "1" Material
+}
+
+
+
+' ─────────────────────────────────────────
+' PERSISTENCE
+' ─────────────────────────────────────────
+package persistence {
+
+    class ConnectionPool {
+        + {static} getInstance() : ConnectionPool
+        + getConnection() : Connection
+    }
+
+    class UserMapper {
+        + {static} login(email, password, connectionPool) : Customer
+        + {static} createUser(email, password, address, phone, role, connectionPool) : void
+        + {static} getIdByEmail(email, connectionPool) : int
+    }
+
+    class AdminMapper {
+        + {static} getAllRegistered(connectionPool) : List<Customer>
+        + {static} deleteCustomerByID(id, connectionPool) : void
+        + {static} createMaterial(name, price, desc, length, connectionPool) : void
+        + {static} editMaterialByID(name, price, desc, length, id, connectionPool) : void
+        + {static} deleteMaterialByID(id, connectionPool) : void
+        + {static} seeAllMaterial(connectionPool) : List<Material>
+    }
+
+    ConnectionPool -down[hidden]-> UserMapper
+    UserMapper -down[hidden]-> AdminMapper
+    AdminMapper -down[hidden]-> CarportMapper
+
+    class CarportMapper {
+        + {static} createCarport(orderId, length, width, height, roofType, shed, connectionPool) : Carport
+        + {static} getCarportById(id, connectionPool) : Carport
+    }
+
+    class OrderMapper {
+        + {static} createOrderId(contactId, connectionPool) : Order
+    }
+
+    class OrderLinesMapper {
+        + {static} createAllOrderLines(orderId, totalOrderLines, connectionPool) : TotalOrderLines
+        + {static} createOrderLine(orderId, materialId, qty, length, connectionPool) : void
+    }
+
+    CarportMapper -down[hidden]-> OrderMapper
+    OrderMapper -down[hidden]-> OrderLinesMapper
+    OrderLinesMapper -down[hidden]-> SalesMapper
+
+    class SalesMapper {
+        + {static} showAllOrdersInformation(connectionPool) : List<Order>
+        + {static} editPrice(connectionPool, price, id) : void
+        + {static} editStatus(connectionPool, status, id) : void
+    }
+
+    class MaterialMapper {
+        + {static} getMaterialByName(name, connectionPool) : Material
+    }
+
+    class ContactMapper {
+        + {static} createContactId(userId, email, phone, address, connectionPool) : int
+    }
+
+    SalesMapper -down[hidden]-> MaterialMapper
+    MaterialMapper -down[hidden]-> ContactMapper
+
+
+' dependency — the class uses another class without owning it.
+    UserMapper ..> ConnectionPool
+    AdminMapper ..> ConnectionPool
+    CarportMapper ..> ConnectionPool
+    OrderMapper ..> ConnectionPool
+    OrderLinesMapper ..> ConnectionPool
+    SalesMapper ..> ConnectionPool
+    MaterialMapper ..> ConnectionPool
+    ContactMapper ..> ConnectionPool
+}
+
+
+
+' ─────────────────────────────────────────
+' CONTROLLERS
+' ─────────────────────────────────────────
+package controller {
+
+    class AdminController {
+        + {static} addRoutes(app, connectionPool) : void
+        + {static} showAllRegistered(ctx, connectionPool) : void
+        + {static} deleteUserByID(ctx, connectionPool) : void
+        + {static} createMaterial(ctx, connectionPool) : void
+        + {static} editMaterialByID(ctx, connectionPool) : void
+        + {static} deleteMaterialByID(ctx, connectionPool) : void
+        + {static} seeAllMaterial(ctx, connectionPool) : void
+    }
+
+    class UserController {
+        + {static} addRoutes(app, connectionPool) : void
+        + {static} createUser(ctx, connectionPool) : void
+        + {static} loginUser(ctx, connectionPool) : void
+        + {static} logoutUser(ctx) : void
+        + {static} usersOrder(ctx, connectionPool) : void
+    }
+
+    AdminController -down[hidden]-> UserController
+
+    class SalesController {
+        + {static} addRoutes(app, connectionPool) : void
+        + {static} showAllOrders(ctx, connectionPool) : void
+        + {static} showOneOrder(ctx, connectionPool) : void
+        + {static} editPriceByID(ctx, connectionPool) : void
+        + {static} editStatusByID(ctx, connectionPool) : void
+        + {static} sendMail(ctx, connectionPool) : void
+    }
+
+    class RequestController {
+        + {static} addRoutes(app, connectionPool) : void
+        + {static} sendRequest(ctx, connectionPool) : void
+        + {static} sendRequestApprovalMail(email, carportId, ctx, connectionPool) : void
+    }
+
+    class IndexController {
+        + {static} addRoutes(app, connectionPool) : void
+    }
+
+    UserController -down[hidden]-> SalesController
+    SalesController -down[hidden]-> RequestController
+    RequestController -down[hidden]-> IndexController
+}
+
+
+
+' ─────────────────────────────────────────
+' APP
+' ─────────────────────────────────────────
+package app {
+
+    class Svg {
+        - svg : StringBuilder
+        + addRectangle(x, y, height, width, style) : void
+        + addLine(x1, y1, x2, y2, style) : void
+        + addArrow(x1, y1, x2, y2) : void
+        + addText(x, y, text) : void
+        + toString() : String
+    }
+
+    class CarportSvg {
+        + addFrame(svg) : void
+        + addBeams(svg) : void
+        + addRafts(svg) : void
+        + addPoles(svg) : void
+        + toString() : String
+    }
+
+    Svg -down[hidden]-> CarportSvg
+
+    class BeamGenerator {
+        + {static} beamGenerator() : int
+        + {static} beamLength(length) : double
+    }
+
+    class RaftGenerator {
+        + {static} raftGenerator(length) : int
+        + {static} raftLength(width) : double
+        + {static} getDistanceBetweenRafts() : double
+    }
+
+    CarportSvg -down[hidden]-> BeamGenerator
+    BeamGenerator -down[hidden]-> RaftGenerator
+
+    class PoleGenerator {
+        + {static} poleGenerator(length, withShed) : int
+        + {static} poleLength() : double
+        + {static} getDisOfPoles() : double
+    }
+
+    class ListGenerator {
+        + {static} ListGenerator(carport, connectionPool) : TotalOrderLines
+    }
+
+    RaftGenerator -down[hidden]-> PoleGenerator
+    PoleGenerator -down[hidden]-> ListGenerator
+
+' association — the class owns or holds a reference to another class
+    CarportSvg "1" --> "1" Svg
+    CarportSvg "1" --> "1" Carport
+
+'dependency — the class uses another class without owning it.
+    CarportSvg ..> BeamGenerator
+    CarportSvg ..> RaftGenerator
+    CarportSvg ..> PoleGenerator
+    ListGenerator ..> MaterialMapper
+    ListGenerator ..> ConnectionPool
+    ListGenerator ..> Carport
+}
+
+
+exceptions -down[hidden]-> utility
+utility -down[hidden]-> validators
+validators -down[hidden]-> config
+
+' ─────────────────────────────────────────
+' EXCEPTIONS
+' ─────────────────────────────────────────
+package exceptions {
+    class DatabaseException {
+        + DatabaseException(message : String)
+    }
+
+' inheritance — DatabaseException extends RuntimeException.
+    DatabaseException --|> RuntimeException
+}
+
+' ─────────────────────────────────────────
+' UTILITY
+' ─────────────────────────────────────────
+package utility {
+    class PasswordUtil {
+        + {static} hashPassword(plain) : String
+        + {static} checkPassword(plain, hashed) : boolean
+    }
+
+    class GmailEmailSender {
+        + sendPlainTextEmail(to, subject, body) : void
+    }
+
+    class GmailEmailSenderHTML {
+        + renderTemplate(templateName, variables) : String
+        + sendHtmlEmail(to, subject, htmlBody) : void
+    }
+}
+
+' ─────────────────────────────────────────
+' VALIDATORS
+' ─────────────────────────────────────────
+package validators {
+    class InputValidator {
+        + {static} isItEmpty(obj) : boolean
+        + {static} isNumeric(str) : boolean
+        + {static} isDanishPhoneNumber(str) : boolean
+    }
+
+    class RoleValidator {
+        + {static} hasRole(ctx, role) : boolean
+    }
+}
+
+' ─────────────────────────────────────────
+' CONFIG
+' ─────────────────────────────────────────
+package config {
+    class SessionConfig {
+        + {static} sessionConfig() : SessionHandler
+    }
+
+    class ThymeleafConfig {
+        + {static} templateEngine() : TemplateEngine
+    }
+}
+
+' ─────────────────────────────────────────
+' CROSS-PACKAGE RELATIONER
+' ─────────────────────────────────────────
+' dependency — the class uses another class without owning it.
+
+' Controllers -> Persistence
+AdminController ..> AdminMapper
+AdminController ..> SalesMapper
+AdminController ..> UserMapper
+AdminController ..> ConnectionPool
+UserController ..> UserMapper
+UserController ..> SalesMapper
+UserController ..> ConnectionPool
+SalesController ..> SalesMapper
+SalesController ..> ConnectionPool
+RequestController ..> ListGenerator
+RequestController ..> ConnectionPool
+IndexController ..> ConnectionPool
+
+' Controllers -> App
+SalesController ..> CarportSvg
+SalesController ..> Svg
+
+' Controllers -> Utility
+AdminController ..> PasswordUtil
+UserController ..> PasswordUtil
+SalesController ..> GmailEmailSenderHTML
+RequestController ..> GmailEmailSenderHTML
+
+' Controllers -> Validators
+AdminController ..> InputValidator
+AdminController ..> RoleValidator
+UserController ..> InputValidator
+SalesController ..> InputValidator
+SalesController ..> RoleValidator
+RequestController ..> InputValidator
+
+' Persistence -> Entities
+UserMapper ..> Customer
+UserMapper ..> GuestCustomer
+AdminMapper ..> Customer
+AdminMapper ..> Material
+SalesMapper ..> Order
+CarportMapper ..> Carport
+OrderLinesMapper ..> TotalOrderLines
+MaterialMapper ..> Material
+
+' Persistence -> Utility
+UserMapper ..> PasswordUtil
+
+' Persistence -> Exceptions
+AdminMapper ..> DatabaseException
+UserMapper ..> DatabaseException
+CarportMapper ..> DatabaseException
+SalesMapper ..> DatabaseException
+OrderMapper ..> DatabaseException
+OrderLinesMapper ..> DatabaseException
+
+' Utility -> Config
+GmailEmailSenderHTML ..> ThymeleafConfig
+
+@enduml
