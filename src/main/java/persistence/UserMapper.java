@@ -2,6 +2,7 @@ package persistence;
 
 import entities.Customer;
 import entities.GuestCustomer;
+import entities.Order;
 import entities.User;
 import exceptions.DatabaseException;
 import utility.PasswordUtil;
@@ -10,6 +11,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserMapper {
 
@@ -89,5 +92,33 @@ public class UserMapper {
             throw new DatabaseException("DB fejl: " + e.getMessage() + " (" + msg + ")");
         }
         return -1;
+    }
+
+    public static List<Order> getOrdersByUserId(int userId, ConnectionPool connectionPool) {
+        List<Order> orders = new ArrayList<>();
+
+        String sql = "SELECT orders.order_id, orders.total_price, orders.status " +
+                "FROM public.orders " +
+                "JOIN public.contact_information ON orders.contact_information_id = contact_information.contact_information_id " +
+                "WHERE contact_information.user_id = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int orderId = rs.getInt("order_id");
+                double totalPrice = rs.getDouble("total_price");
+                String status = rs.getString("status");
+
+                orders.add(new Order(orderId, totalPrice, status));
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("DB fejl: " + e.getMessage());
+        }
+        return orders;
     }
 }
