@@ -8,7 +8,7 @@ import java.sql.*;
 public class OrderMapper {
 
     public static Order createOrderId(int contactInformationId, ConnectionPool connectionPool){
-        String sql = "INSERT INTO orders (contact_information_id, status) VALUES (?, 'approved') RETURNING order_id, contact_information_id, total_price, status, created_at";
+        String sql = "INSERT INTO orders (contact_information_id, status) VALUES (?, 'approved') RETURNING order_id, contact_information_id, total_price, status";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -23,7 +23,6 @@ public class OrderMapper {
                 int contactId = rs.getInt("contact_information_id");
                 double totalPrice = rs.getDouble("total_price");
                 String status = rs.getString("status");
-                Timestamp createdAt = rs.getTimestamp("created_at");
 
                 return new Order(orderId, totalPrice, status);
             }
