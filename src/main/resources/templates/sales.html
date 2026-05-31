@@ -14,6 +14,7 @@
 </head>
 <body>
 <header th:replace="~{index :: header}"></header>
+<div class ="bodyWrapper">
 <h1>Oversigt over alle ordrer</h1>
 <!-- Shows error msg if pressent -->
 <p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></p>
@@ -104,7 +105,7 @@
     </tr>
     </tbody>
 </table>
-
+</div>
 <script src="/js/hamburger.js"></script>
 </body>
 </html>

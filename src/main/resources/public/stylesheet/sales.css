@@ -1,9 +1,10 @@
 /* General body styling */
 body {
     font-family: Arial, sans-serif;
+}
+.bodyWrapper{
     margin: 20px;
 }
-
 /* Main title */
 h1 {
     margin-bottom: 20px;
