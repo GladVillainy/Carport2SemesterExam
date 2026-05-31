@@ -1,8 +1,4 @@
 package entities;
-
-
-
-import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class Order {
