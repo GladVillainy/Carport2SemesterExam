@@ -13,6 +13,7 @@ public class CarportSvg {
     private double widthRafts;
     private int amountPoles;
     private double distanceBetweenPoles;
+    private double widthPoles;
     private boolean withShed;
 
     public CarportSvg(Carport carport) {
@@ -26,6 +27,7 @@ public class CarportSvg {
         this.widthRafts = RaftGenerator.getStandartWidth();
         this.amountPoles = PoleGenerator.poleGenerator(length, carport.isShed());
         this.distanceBetweenPoles = PoleGenerator.getDisOfPoles();
+        this.widthPoles = PoleGenerator.getStandartWidth();
 
 
 
@@ -36,7 +38,7 @@ public class CarportSvg {
         addFrame(innerSvg);
         addRafts(innerSvg);
         addBeams(innerSvg);
-        //addPoles(innerSvg);
+        addPoles(innerSvg);
         carportSvg.addSvg(innerSvg);
     }
 
@@ -70,13 +72,18 @@ public class CarportSvg {
         }
     }
     public void addPoles(Svg svg){
-        //poles i toppen
-        for (int i = (int) distanceBetweenPoles/4; i < (amountPoles*distanceBetweenPoles)/2 ; i+=distanceBetweenPoles) {
-            svg.addRectangle(i, 32, 9.7, 10, "stroke:#000000; fill: #ffffff");
-        };
-        //poles i bunden
-        for (int i = (int) distanceBetweenPoles/4; i < (amountPoles*distanceBetweenPoles)/2 ; i+=distanceBetweenPoles) {
-            svg.addRectangle(i, 562, 9.7, 10, "stroke:#000000; fill: #ffffff");
+        //samme princip som rafts, tegner første og sidste, nu det så gange 2, forskyder starten med 100 cm, samt slutningen
+        svg.addRectangle(100, 32, 9.7, 10, "stroke:#000000; fill: #ffffff");
+        svg.addRectangle(100, width-38, 9.7, 10, "stroke:#000000; fill: #ffffff");
+        svg.addRectangle((length-widthPoles)-100, 32, 9.7, 10, "stroke:#000000; fill: #ffffff");
+        svg.addRectangle((length-widthPoles)-100, width-38, 9.7, 10, "stroke:#000000; fill: #ffffff");
+
+        //samme princip som rafts, /2 fordi der bliver tegnet 2 af gangen, -2 for at fjerne de sidste pæle
+        for (int i = 1; i <= (amountPoles/2)-2; i+=1) {
+
+            //tilføjes de 100 cm til x-aksen her også, den forsydende længde
+            svg.addRectangle((i*distanceBetweenPoles)+100, 32, 9.7, 10, "stroke:#000000; fill: #ffffff");
+            svg.addRectangle((i*distanceBetweenPoles)+100, width-38, 9.7, 10, "stroke:#000000; fill: #ffffff");
         };
     }
 
