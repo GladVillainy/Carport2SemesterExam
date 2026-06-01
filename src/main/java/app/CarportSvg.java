@@ -10,63 +10,108 @@ public class CarportSvg {
     private double beamLength;
     private int amountRafts;
     private double distanceBetweenRafts;
+    private double widthRafts;
     private int amountPoles;
     private double distanceBetweenPoles;
+    private double widthPoles;
+    private boolean withShed;
 
     public CarportSvg(Carport carport) {
         this.width = carport.getWidth();
         this.length = carport.getLength();
-        this.amountBeams = BeamGenerator.beamGenerator();
-        this.beamLength = (BeamGenerator.beamLength(width));
+        this.withShed = carport.isShed();
+        this.amountBeams = BeamGenerator.beamGenerator(withShed);
+        this.beamLength = (BeamGenerator.beamLength(width, withShed));
         this.amountRafts = RaftGenerator.raftGenerator(length);
         this.distanceBetweenRafts = RaftGenerator.getDistanceBetweenRafts();
+        this.widthRafts = RaftGenerator.getStandartWidth();
         this.amountPoles = PoleGenerator.poleGenerator(length, carport.isShed());
         this.distanceBetweenPoles = PoleGenerator.getDisOfPoles();
+        this.widthPoles = PoleGenerator.getStandartWidth();
 
 
-        carportSvg = new Svg(0,0, "0 0 855 690", "100%");
+
+        carportSvg = new Svg(0,0, "0 0 " + (length + 75) + " " + (width + 90), "100%");
         addArrows(carportSvg);
         addTexts(carportSvg);
-        Svg innerSvg = new Svg(75,10, "0 0 780 600", "91%");
+        Svg innerSvg = new Svg(75,10, "0 0 "+(length+75)+" "+(width+90), "100%");
         addFrame(innerSvg);
-        addBeams(innerSvg);
         addRafts(innerSvg);
-        addPoles(innerSvg);
+        addBeams(innerSvg);
+        addPoles(innerSvg, withShed);
         carportSvg.addSvg(innerSvg);
     }
 
     public void addFrame(Svg svg) {
-        svg.addRectangle(0,0, 600,780, "stroke:#000000; fill: #ffffff");
+        svg.addRectangle(0,0, width,length, "stroke:#000000; fill: #ffffff");
     }
 
     public void addTexts(Svg svg) {
-        svg.addTextWithRotation(30,300,-90,"600cm");
-        svg.addText(502, 670, "780cm");
+        svg.addTextWithRotation(30, width / 2, -90, width + "cm");
+        svg.addText(75 + length / 2, width + 70, length + "cm");
     }
 
     public void addArrows(Svg svg){
-        svg.addArrow(40,10,40,610);
-        svg.addArrow(75,650,855,650);
+        svg.addArrow(40, 10, 40, width + 10);
+        svg.addArrow(75, width + 50, length + 75, width + 50);
     }
 
     public void addBeams(Svg svg){
-        svg.addRectangle(0,35,4.5,780,"stroke-width:1px; stroke:#000000; fill: #ffffff");
-        svg.addRectangle(0,565,4.5,780,"stroke-width:1px; stroke:#000000; fill: #ffffff");
+        svg.addRectangle(0,35,4.5,length,"stroke-width:1px; stroke:#000000; fill: #ffffff");
+        svg.addRectangle(0,width-35,4.5,length,"stroke-width:1px; stroke:#000000; fill: #ffffff");
     }
 
     public void addRafts(Svg svg){
-        for (int i = 0; i <= length; i+= 52) {
-            svg.addRectangle(i, 0, 600, 4.5,"stroke:#000000; fill: #ffffff");
+        //tegner første og sidste spær
+        svg.addRectangle(0, 0, width, 4.5,"stroke:#000000; fill: #ffffff");
+        svg.addRectangle(length-widthRafts, 0, width, 4.5,"stroke:#000000; fill: #ffffff");
+
+        //starter med 1 for at ungå første spær og slutter i -2 fra mængden af spær for at ungå sidste
+        for (int i = 1; i <= amountRafts-2; i+= 1) {
+            svg.addRectangle(i*distanceBetweenRafts, 0, width, 4.5,"stroke:#000000; fill: #ffffff");
         }
     }
-    public void addPoles(Svg svg){
-        //poles i toppen
-        for (int i = (int) distanceBetweenPoles/4; i < (amountPoles*distanceBetweenPoles)/2 ; i+=distanceBetweenPoles) {
-            svg.addRectangle(i, 32, 9.7, 10, "stroke:#000000; fill: #ffffff");
-        };
-        //poles i bunden
-        for (int i = (int) distanceBetweenPoles/4; i < (amountPoles*distanceBetweenPoles)/2 ; i+=distanceBetweenPoles) {
-            svg.addRectangle(i, 562, 9.7, 10, "stroke:#000000; fill: #ffffff");
+    public void addPoles(Svg svg, boolean withShed){
+        //samme princip som rafts, tegner første og sidste, nu det så gange 2, forskyder starten med 100 cm, samt slutningen
+        svg.addRectangle(100, 32, 9.7, 10, "stroke:#000000; fill: #ffffff");
+        svg.addRectangle(100, width-38, 9.7, 10, "stroke:#000000; fill: #ffffff");
+
+        //hvis der ikke skal laves skur, kan dette bruges
+        if (!withShed) {
+            svg.addRectangle((length - widthPoles) - 100, 32, 9.7, 10, "stroke:#000000; fill: #ffffff");
+            svg.addRectangle((length - widthPoles) - 100, width - 38, 9.7, 10, "stroke:#000000; fill: #ffffff");
+        }
+        if (withShed) {
+            //Vi skal ret slutpælende til at være tættere på slutnigen, antager udfra tegningen givet at det er 25 cm fr enden
+            //tilføje 2 pæle 200 cm fra slutpælene, samt tegne 2 pæle i midten af tegningen.
+            //i de 2 nye beskrevede x-koordinater
+
+            double x1 = (length-widthPoles)-25;
+            double x2 = x1-200;
+
+            double y1 = 32;
+            double y2 = (width/2);
+            double y3 = width-38;
+
+            svg.addRectangle(x1, y1, 9.7, 10, "stroke:#000000; fill: #ffffff");
+            svg.addRectangle(x1, y2, 9.7, 10, "stroke:#000000; fill: #ffffff");
+            svg.addRectangle(x1, y3, 9.7, 10, "stroke:#000000; fill: #ffffff");
+            svg.addRectangle(x2, y1, 9.7, 10, "stroke:#000000; fill: #ffffff");
+            svg.addRectangle(x2, y2, 9.7, 10, "stroke:#000000; fill: #ffffff");
+            svg.addRectangle(x2, y3, 9.7, 10, "stroke:#000000; fill: #ffffff");
+
+
+        }
+        //samme princip som rafts, /2 fordi der bliver tegnet 2 af gangen, -2 for at fjerne de sidste pæle
+        // her trækker jeg pælene fra som bliver brugt til skuret
+        int amountPolesMinusShed = 6;
+
+        for (int i = 1; i <= (amountPolesMinusShed/2)-2; i+=1) {
+
+            //tilføjes de 100 cm til x-aksen her også, den forsydende længde
+
+            svg.addRectangle((i*distanceBetweenPoles)+100, 32, 9.7, 10, "stroke:#000000; fill: #ffffff");
+            svg.addRectangle((i*distanceBetweenPoles)+100, width-38, 9.7, 10, "stroke:#000000; fill: #ffffff");
         };
     }
 

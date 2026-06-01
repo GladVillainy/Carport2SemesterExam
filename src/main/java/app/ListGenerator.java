@@ -21,8 +21,8 @@ public class ListGenerator {
         orderLines.add(new OrderLine(RaftGenerator.raftGenerator(carport.getLength()), raft, raft.getLength()));
 
         //beam
-        beam.setLength((int) BeamGenerator.beamLength(carport.getWidth()));
-        orderLines.add(new OrderLine(BeamGenerator.beamGenerator(), beam, beam.getLength()));
+        beam.setLength((int) BeamGenerator.beamLength(carport.getWidth(), carport.isShed()));
+        orderLines.add(new OrderLine(BeamGenerator.beamGenerator(carport.isShed()), beam, beam.getLength()));
 
         //pole
         pole.setLength((int) PoleGenerator.poleLength());

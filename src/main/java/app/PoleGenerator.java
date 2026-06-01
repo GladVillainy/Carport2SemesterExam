@@ -1,36 +1,45 @@
 package app;
 
 public class PoleGenerator {
-    private static double standartWidth = 97;
+    private static double standartWidth = 9.7;
     private static double disOfPoles;
 
 
     public static int poleGenerator(double length, boolean withShed) {
 
-        //omskriver længden fra cm til meter
-        length = length/100;
         //siden der ikke er nogen regler for hvornår 3 stolper ikke er nok længere
-        //sætter jeg en begrænsning på at distancen mellem stolperne max må være 4 meter
         double numberOfPoles = 6;
-        double disOfPole = length/2;
-        int i = 1;
-
-        while (disOfPole > 4) {
-            numberOfPoles += 2;
-            disOfPole = length / (2 + i++);
-        }
+        double amountOfPolesNeededForShed = 5;
+        double numberOfPolesWithOutShed = numberOfPoles;
 
         if (withShed) {
             //hvis skur tilføjes, tilføjes der 4, så der er 6 i alt,
             //da man kan genanvende 2 fra carporten, plus 1 ekstra til at lave døren til skuret
-            numberOfPoles = numberOfPoles + 4 + 1;
+            numberOfPoles = numberOfPoles + amountOfPolesNeededForShed;
 
-            //logik til at sætte ny disOfPole
+
+            numberOfPolesWithOutShed = numberOfPoles-amountOfPolesNeededForShed;
         }
 
-        //laver disOfPole om til cm igen
-        disOfPole = disOfPole*100;
+        //distancen mellem pælene udføres ved at trække 2 meter fra længden (1 meter i begge sider)
+        //derefter dividere vi med antallet at pæle minus startpælene(altså 2) og slutpælene(2 igen)
+        //i situationen hvorpå der er blevet lagt pælene oven i til skuret, trækker vi dem fra.
+        int offsetLength = 200;
+
+        double disOfPole = (length-offsetLength)/(numberOfPolesWithOutShed-4);
+
         disOfPoles = disOfPole;
+
+        if (withShed) {
+            //hvis der er skur, så reducer afstanden med pælensBredde + 25 cm.
+            //så pælen står lidt forskudt fra midten
+            double distanceFromRightsideToShed = standartWidth+25;
+
+            disOfPole -= distanceFromRightsideToShed;
+            disOfPoles = disOfPole;
+        }
+
+
         return (int) numberOfPoles;
 
     }
@@ -40,7 +49,7 @@ public class PoleGenerator {
         return 300;
     }
 
-    public double getStandartWidth() {
+    public static double getStandartWidth() {
         return standartWidth;
     }
 
