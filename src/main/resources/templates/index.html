@@ -72,6 +72,8 @@
             <input th:if="${session.currentUser == null}" type="text" name="address" placeholder="Adresse">
             <button type="submit">Send forespørgsel</button>
         </form>
+        <p class="success" th:if="${successMsg}" th:text="${successMsg}"></p>
+        <p class="fail" th:if="${failMsg}" th:text="${failMsg}"></p>
     </div>
 </div>
 

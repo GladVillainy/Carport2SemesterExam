@@ -32,16 +32,16 @@ public class RequestController {
 
         //makes sure the appropriate values are numeric
         if(InputValidator.isItEmpty(lengthInput) || !InputValidator.isNumeric(lengthInput)) {
-            ctx.attribute("msg", "Længde skal være et tal");
-            ctx.render("carportRequest.html");
+            ctx.attribute("failMsg", "Længde skal være et tal");
+            ctx.render("index.html");
             return;
         } else if(InputValidator.isItEmpty(widthInput) || !InputValidator.isNumeric(widthInput)) {
-            ctx.attribute("msg", "Bredde skal være et tal");
-            ctx.render("carportRequest.html");
+            ctx.attribute("failMsg", "Bredde skal være et tal");
+            ctx.render("index.html");
             return;
         } else if(InputValidator.isItEmpty(heightInput) || !InputValidator.isNumeric(heightInput)) {
-            ctx.attribute("msg", "Højde skal være et tal");
-            ctx.render("carportRequest.html");
+            ctx.attribute("failMsg", "Højde skal være et tal");
+            ctx.render("index.html");
             return;
         }
         int length = Integer.parseInt(lengthInput);
@@ -50,16 +50,16 @@ public class RequestController {
 
         //makes sure the numeric values are within valid boundaries
         if(length < 240 || length > 780) {
-            ctx.attribute("msg", "Længde skal være mellem 240 og 780cm");
-            ctx.render("carportRequest.html");
+            ctx.attribute("failMsg", "Længde skal være mellem 240 og 780cm");
+            ctx.render("index.html");
             return;
         } else if(width < 240 || width > 600) {
-            ctx.attribute("msg", "Bredde skal være mellem 240 og 600cm");
-            ctx.render("carportRequest.html");
+            ctx.attribute("failMsg", "Bredde skal være mellem 240 og 600cm");
+            ctx.render("index.html");
             return;
         } else if(height < 200 || height > 300) {
-            ctx.attribute("msg", "Højde skal være mellem 200 og 300cm");
-            ctx.render("carportRequest.html");
+            ctx.attribute("failMsg", "Højde skal være mellem 200 og 300cm");
+            ctx.render("index.html");
             return;
         }
 
@@ -91,8 +91,8 @@ public class RequestController {
             guestAddress = ctx.formParam("address");
 
             if(!InputValidator.isDanishPhoneNumber(guestPhoneInput)) {
-                ctx.attribute("msg", "Telefonnummer skal være et 8-cifret tal");
-                ctx.render("carportRequest.html");
+                ctx.attribute("failMsg", "Telefonnummer skal være et 8-cifret tal");
+                ctx.render("index.html");
                 return;
             }
 
@@ -136,7 +136,7 @@ public class RequestController {
             sendRequestApprovalMail(guestEmail, carport.getId(), ctx, connectionPool);
         }
 
-        ctx.attribute("msg", "Forespørgsel sendt");
+        ctx.attribute("successMsg", "Forespørgsel sendt");
         ctx.render("index.html");
     }
 
