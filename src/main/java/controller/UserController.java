@@ -36,8 +36,8 @@ public class UserController {
 
         //Verifies if phone isnt empty and isnt a number, to prevent NumberFormatException
         String phoneInput = ctx.formParam("phone");
-        if(!InputValidator.isItEmpty(phoneInput) && !InputValidator.isNumeric(phoneInput)){
-            ctx.attribute("msg", "Telefonnummer skal være et tal");
+        if(!InputValidator.isDanishPhoneNumber(phoneInput)){
+            ctx.attribute("msg", "Telefonnummer skal være et 8-cifret tal");
             ctx.render("createUser.html");
             return;
         }
