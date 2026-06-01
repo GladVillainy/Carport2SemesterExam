@@ -18,7 +18,7 @@ public class BeamGenerator {
         if (withShed){
 
         }
-        double sternL = 25;
+        double sternL = 2.5;
         length = length-sternL-(2*sternL);
         return length;
     }

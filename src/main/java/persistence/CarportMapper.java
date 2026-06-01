@@ -26,7 +26,7 @@ public class CarportMapper {
 
             if (rs.next()) {
                 int carportId = rs.getInt("carport_id");
-                return new Carport(carportId, length, width, height, roofType, shed);
+                return new Carport(carportId, width, length, height, roofType, shed);
             }
 
         } catch (SQLException e) {

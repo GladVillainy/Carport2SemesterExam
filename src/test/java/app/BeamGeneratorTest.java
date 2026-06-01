@@ -8,9 +8,9 @@ class BeamGeneratorTest {
 
     @Test
     void correctLengthOfBeam() {
-        double length = BeamGenerator.beamLength(7800, false);
+        double length = BeamGenerator.beamLength(780, false);
 
-        assertEquals(7725,length);
+        assertEquals(772.5,length);
     }
 
     @Test
