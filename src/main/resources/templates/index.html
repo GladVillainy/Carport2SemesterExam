@@ -63,9 +63,10 @@
         <form action="/sendRequest" method="post">
             <input type="text" name="length" placeholder="Længde (cm)"/>
             <input type="text" name="width" placeholder="Bredde (cm)"/>
-            <input type="text" name="height" placeholder="Højde (cm)"/>
+            <input type="text" placeholder="Højde sat til 200 (cm)" disabled/>
+            <input type="hidden" name="height" value="200">
             <label>Fladt tag <input type="radio" name="roof type" value="fladt tag" checked/></label>
-            <label>Høj rejsning <input type="radio" name="roof type" value="høj rejsning"/></label>
+            <label>Høj rejsning <input type="radio" name="roof type" value="høj rejsning" disabled/></label>
             <label>Skur <input type="checkbox" name="shed"/></label>
             <input th:if="${session.currentUser == null}" type="text" name="email" placeholder="E-mail">
             <input th:if="${session.currentUser == null}" type="text" name="phone" placeholder="Telefonnummer">
