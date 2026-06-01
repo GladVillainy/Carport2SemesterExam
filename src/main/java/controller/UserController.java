@@ -22,8 +22,7 @@ public class UserController {
 
         app.get("/logout", ctx -> logoutUser(ctx));
 
-        app.get("/profil", ctx -> ctx.render("profil.html"));
-        app.post("/profil", ctx -> usersOrder(ctx, connectionPool));
+        app.get("/profil", ctx -> usersOrder(ctx, connectionPool));
     }
 
 
@@ -102,19 +101,10 @@ public class UserController {
         ctx.render("index.html");
     }
 
-    public static void usersOrder(Context ctx, ConnectionPool connectionPool){
-        //Find user
+    public static void usersOrder(Context ctx, ConnectionPool connectionPool) {
         Customer customer = ctx.sessionAttribute("currentUser");
-
-        //Get all orders
-        List<Order> orders = SalesMapper.showAllOrdersInformation(connectionPool);
-
-        //sort list to find the current users orders
-        List<Order> userOrders = orders.stream()
-                .filter(o ->
-                        o.getCustomer().getId() == customer.getId())
-                .toList();
+        List<Order> userOrders = UserMapper.getOrdersByUserId(customer.getId(), connectionPool);
         ctx.attribute("userOrders", userOrders);
-        ctx.redirect("/profil");
+        ctx.render("profil.html");
     }
 }

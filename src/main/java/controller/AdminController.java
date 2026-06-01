@@ -217,30 +217,35 @@ public class AdminController {
     public static void editMaterialByID(Context ctx, ConnectionPool connectionPool) {
         int materialID = Integer.parseInt(ctx.formParam("material_id"));
 
-        //Verifies if price isnt empty and isnt a number, to prevent NumberFormatException
+        // Verifies if price isn't empty and isn't a number, to prevent NumberFormatException
         String priceInput = ctx.formParam("price");
-        if (!InputValidator.isNumeric(priceInput)) {
-            ctx.attribute("errorMessage", "Pris skal være et tal");
-            ctx.redirect("/adminMaterialCRUD");
-            return;
+        Double price = null;
+        if (priceInput != null && !priceInput.isEmpty()) {
+            if (!InputValidator.isNumeric(priceInput)) {
+                ctx.attribute("errorMessage", "Pris skal være et tal");
+                ctx.render("adminMaterialCRUD.html");
+                return;
+            }
+            price = Double.parseDouble(priceInput);
         }
-        double price = Double.parseDouble(priceInput);
 
-        //Verifies if length isnt empty and isnt a number, to prevent NumberFormatException
+        // Verifies if length isn't empty and isn't a number, to prevent NumberFormatException
         String lengthInput = ctx.formParam("length");
-        if (!InputValidator.isNumeric(lengthInput)) {
-            ctx.attribute("errorMessage", "Længde skal være et tal");
-            ctx.redirect("/adminMaterialCRUD");
-            return;
+        Integer length = null;
+        if (lengthInput != null && !lengthInput.isEmpty()) {
+            if (!InputValidator.isNumeric(lengthInput)) {
+                ctx.attribute("errorMessage", "Længde skal være et tal");
+                ctx.render("adminMaterialCRUD.html");
+                return;
+            }
+            length = Integer.parseInt(lengthInput);
         }
-        int length = Integer.parseInt(lengthInput);
 
         String name = ctx.formParam("name");
         String description = ctx.formParam("description");
 
         AdminMapper.editMaterialByID(name, price, description, length, materialID, connectionPool);
         ctx.redirect("/adminMaterialCRUD");
-
     }
 
     public static void deleteMaterialByID(Context ctx, ConnectionPool connectionPool) {
