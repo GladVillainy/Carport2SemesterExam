@@ -1,18 +1,16 @@
 package app;
 
 public class RaftGenerator {
-    private double standartWidth = 45;
+    private static double standartWidth = 4.5;
     private static double distanceBetweenRafts;
 
 
     public static int raftGenerator(double length) {
-        //omskriver længden fra cm til meter
-        length = length/100;
-        //carport længde / 0.60 (max centerafstand) + 1(kan ikke være mindre end 2 spær)
-        if (length > 1) {
+        //carport længde / 60cm (max centerafstand) + 1(kan ikke være mindre end 2 spær)
+        if (length > 100) {
             double numberOfSpacesBetweenRafts = 0.0;
             //finder det lavest mulige mellemrum imellem spærne
-            numberOfSpacesBetweenRafts = (length/0.6);
+            numberOfSpacesBetweenRafts = (length/60);
             //afrunder til højeste
             double roundedTotal = Math.ceil(numberOfSpacesBetweenRafts);
             //hvis der ikke er rundet op,
@@ -24,7 +22,8 @@ public class RaftGenerator {
             roundedTotal = roundedTotal+1;
 
             //gemmer distancen mellem, til at lave tegning
-            distanceBetweenRafts = (length)/roundedTotal;
+            //da distancen ikke tager højde fra startspær trækker jeg -1 fra roundedTotal
+            distanceBetweenRafts = length/(roundedTotal-1);
 
             return (int) roundedTotal;
         }
@@ -41,7 +40,7 @@ public class RaftGenerator {
         return distanceBetweenRafts;
     }
 
-    public double getStandartWidth() {
+    public static double getStandartWidth() {
         return standartWidth;
     }
 }

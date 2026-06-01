@@ -10,53 +10,63 @@ public class CarportSvg {
     private double beamLength;
     private int amountRafts;
     private double distanceBetweenRafts;
+    private double widthRafts;
     private int amountPoles;
     private double distanceBetweenPoles;
+    private boolean withShed;
 
     public CarportSvg(Carport carport) {
         this.width = carport.getWidth();
         this.length = carport.getLength();
-        this.amountBeams = BeamGenerator.beamGenerator();
-        this.beamLength = (BeamGenerator.beamLength(width));
+        this.withShed = carport.isShed();
+        this.amountBeams = BeamGenerator.beamGenerator(withShed);
+        this.beamLength = (BeamGenerator.beamLength(width, withShed));
         this.amountRafts = RaftGenerator.raftGenerator(length);
         this.distanceBetweenRafts = RaftGenerator.getDistanceBetweenRafts();
+        this.widthRafts = RaftGenerator.getStandartWidth();
         this.amountPoles = PoleGenerator.poleGenerator(length, carport.isShed());
         this.distanceBetweenPoles = PoleGenerator.getDisOfPoles();
 
 
-        carportSvg = new Svg(0,0, "0 0 855 690", "100%");
+
+        carportSvg = new Svg(0,0, "0 0 " + (length + 75) + " " + (width + 90), "100%");
         addArrows(carportSvg);
         addTexts(carportSvg);
-        Svg innerSvg = new Svg(75,10, "0 0 780 600", "91%");
+        Svg innerSvg = new Svg(75,10, "0 0 "+(length+75)+" "+(width+90), "100%");
         addFrame(innerSvg);
-        addBeams(innerSvg);
         addRafts(innerSvg);
-        addPoles(innerSvg);
+        addBeams(innerSvg);
+        //addPoles(innerSvg);
         carportSvg.addSvg(innerSvg);
     }
 
     public void addFrame(Svg svg) {
-        svg.addRectangle(0,0, 600,780, "stroke:#000000; fill: #ffffff");
+        svg.addRectangle(0,0, width,length, "stroke:#000000; fill: #ffffff");
     }
 
     public void addTexts(Svg svg) {
-        svg.addTextWithRotation(30,300,-90,"600cm");
-        svg.addText(502, 670, "780cm");
+        svg.addTextWithRotation(30, width / 2, -90, width + "cm");
+        svg.addText(75 + length / 2, width + 70, length + "cm");
     }
 
     public void addArrows(Svg svg){
-        svg.addArrow(40,10,40,610);
-        svg.addArrow(75,650,855,650);
+        svg.addArrow(40, 10, 40, width + 10);
+        svg.addArrow(75, width + 50, length + 75, width + 50);
     }
 
     public void addBeams(Svg svg){
-        svg.addRectangle(0,35,4.5,780,"stroke-width:1px; stroke:#000000; fill: #ffffff");
-        svg.addRectangle(0,565,4.5,780,"stroke-width:1px; stroke:#000000; fill: #ffffff");
+        svg.addRectangle(0,35,4.5,length,"stroke-width:1px; stroke:#000000; fill: #ffffff");
+        svg.addRectangle(0,width-35,4.5,length,"stroke-width:1px; stroke:#000000; fill: #ffffff");
     }
 
     public void addRafts(Svg svg){
-        for (int i = 0; i <= length; i+= 52) {
-            svg.addRectangle(i, 0, 600, 4.5,"stroke:#000000; fill: #ffffff");
+        //tegner første og sidste spær
+        svg.addRectangle(0, 0, width, 4.5,"stroke:#000000; fill: #ffffff");
+        svg.addRectangle(length-widthRafts, 0, width, 4.5,"stroke:#000000; fill: #ffffff");
+
+        //starter med 1 for at ungå første spær og slutter i -2 fra mængden af spær for at ungå sidste
+        for (int i = 1; i <= amountRafts-2; i+= 1) {
+            svg.addRectangle(i*distanceBetweenRafts, 0, width, 4.5,"stroke:#000000; fill: #ffffff");
         }
     }
     public void addPoles(Svg svg){
