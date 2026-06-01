@@ -77,8 +77,15 @@ button:hover {
 }
 
 p {
-    color: red;
     margin-bottom: 12px;
+}
+
+.fail {
+    color: red;
+}
+
+.success {
+    color: black;
 }
 
 a {
