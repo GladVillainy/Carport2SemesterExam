@@ -9,20 +9,37 @@ public class PoleGenerator {
 
         //siden der ikke er nogen regler for hvornår 3 stolper ikke er nok længere
         double numberOfPoles = 6;
+        double amountOfPolesNeededForShed = 5;
+        double numberOfPolesWithOutShed = numberOfPoles;
 
         if (withShed) {
             //hvis skur tilføjes, tilføjes der 4, så der er 6 i alt,
             //da man kan genanvende 2 fra carporten, plus 1 ekstra til at lave døren til skuret
-            //numberOfPoles = numberOfPoles + 4 + 1;
+            numberOfPoles = numberOfPoles + amountOfPolesNeededForShed;
 
-            //logik til at sætte ny disOfPole
+
+            numberOfPolesWithOutShed = numberOfPoles-amountOfPolesNeededForShed;
         }
 
         //distancen mellem pælene udføres ved at trække 2 meter fra længden (1 meter i begge sider)
         //derefter dividere vi med antallet at pæle minus startpælene(altså 2) og slutpælene(2 igen)
-        double disOfPole = (length-200)/(numberOfPoles-4);
+        //i situationen hvorpå der er blevet lagt pælene oven i til skuret, trækker vi dem fra.
+        int offsetLength = 200;
+
+        double disOfPole = (length-offsetLength)/(numberOfPolesWithOutShed-4);
 
         disOfPoles = disOfPole;
+
+        if (withShed) {
+            //hvis der er skur, så reducer afstanden med pælensBredde + 25 cm.
+            //så pælen står lidt forskudt fra midten
+            double distanceFromRightsideToShed = standartWidth+25;
+
+            disOfPole -= distanceFromRightsideToShed;
+            disOfPoles = disOfPole;
+        }
+
+
         return (int) numberOfPoles;
 
     }

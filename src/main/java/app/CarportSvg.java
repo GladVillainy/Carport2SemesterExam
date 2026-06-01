@@ -38,7 +38,7 @@ public class CarportSvg {
         addFrame(innerSvg);
         addRafts(innerSvg);
         addBeams(innerSvg);
-        addPoles(innerSvg);
+        addPoles(innerSvg, withShed);
         carportSvg.addSvg(innerSvg);
     }
 
@@ -71,17 +71,45 @@ public class CarportSvg {
             svg.addRectangle(i*distanceBetweenRafts, 0, width, 4.5,"stroke:#000000; fill: #ffffff");
         }
     }
-    public void addPoles(Svg svg){
+    public void addPoles(Svg svg, boolean withShed){
         //samme princip som rafts, tegner første og sidste, nu det så gange 2, forskyder starten med 100 cm, samt slutningen
         svg.addRectangle(100, 32, 9.7, 10, "stroke:#000000; fill: #ffffff");
         svg.addRectangle(100, width-38, 9.7, 10, "stroke:#000000; fill: #ffffff");
-        svg.addRectangle((length-widthPoles)-100, 32, 9.7, 10, "stroke:#000000; fill: #ffffff");
-        svg.addRectangle((length-widthPoles)-100, width-38, 9.7, 10, "stroke:#000000; fill: #ffffff");
 
+        //hvis der ikke skal laves skur, kan dette bruges
+        if (!withShed) {
+            svg.addRectangle((length - widthPoles) - 100, 32, 9.7, 10, "stroke:#000000; fill: #ffffff");
+            svg.addRectangle((length - widthPoles) - 100, width - 38, 9.7, 10, "stroke:#000000; fill: #ffffff");
+        }
+        if (withShed) {
+            //Vi skal ret slutpælende til at være tættere på slutnigen, antager udfra tegningen givet at det er 25 cm fr enden
+            //tilføje 2 pæle 200 cm fra slutpælene, samt tegne 2 pæle i midten af tegningen.
+            //i de 2 nye beskrevede x-koordinater
+
+            double x1 = (length-widthPoles)-25;
+            double x2 = x1-200;
+
+            double y1 = 32;
+            double y2 = (width/2);
+            double y3 = width-38;
+
+            svg.addRectangle(x1, y1, 9.7, 10, "stroke:#000000; fill: #ffffff");
+            svg.addRectangle(x1, y2, 9.7, 10, "stroke:#000000; fill: #ffffff");
+            svg.addRectangle(x1, y3, 9.7, 10, "stroke:#000000; fill: #ffffff");
+            svg.addRectangle(x2, y1, 9.7, 10, "stroke:#000000; fill: #ffffff");
+            svg.addRectangle(x2, y2, 9.7, 10, "stroke:#000000; fill: #ffffff");
+            svg.addRectangle(x2, y3, 9.7, 10, "stroke:#000000; fill: #ffffff");
+
+
+        }
         //samme princip som rafts, /2 fordi der bliver tegnet 2 af gangen, -2 for at fjerne de sidste pæle
-        for (int i = 1; i <= (amountPoles/2)-2; i+=1) {
+        // her trækker jeg pælene fra som bliver brugt til skuret
+        int amountPolesMinusShed = 6;
+
+        for (int i = 1; i <= (amountPolesMinusShed/2)-2; i+=1) {
 
             //tilføjes de 100 cm til x-aksen her også, den forsydende længde
+
             svg.addRectangle((i*distanceBetweenPoles)+100, 32, 9.7, 10, "stroke:#000000; fill: #ffffff");
             svg.addRectangle((i*distanceBetweenPoles)+100, width-38, 9.7, 10, "stroke:#000000; fill: #ffffff");
         };
